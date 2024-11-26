@@ -1,0 +1,4 @@
+# Arquivos Unity (não devem ser modificados pelo Git)
+*.unity binary
+*.prefab binary
+*.meta text eol=lf

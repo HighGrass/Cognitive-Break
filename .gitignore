@@ -1,0 +1,40 @@
+# User-specific files
+.vs/
+.idea/
+.vscode/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files (for Unity Windows builds)
+*.pdb
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+
+# Ignore Unity's temporary files
+Library/
+Temp/
+Obj/
+
+# Ignore generated files
+Build/
+Builds/
+*.apk
+*.unitypackage
+
+# Ignore crash logs
+*.log
+
+# Ignore user-specific files
+*.user
+*.userprefs
