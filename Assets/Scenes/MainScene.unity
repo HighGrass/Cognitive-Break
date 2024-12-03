@@ -453,6 +453,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 430742445}
     m_Modifications:
+    - target: {fileID: -9066343469281984317, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01508
+      objectReference: {fileID: 0}
     - target: {fileID: -8771553575089065759, guid: 35189977db87d444380cb817aa7b4536, type: 3}
       propertyPath: m_Intensity
       value: 100
@@ -530,16 +534,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_Range
+      value: 22.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_DrawHalo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
       propertyPath: m_Intensity
-      value: 500
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
       propertyPath: m_Lightmapping
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4593535520978057689, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_Shadows.m_Resolution
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -4354896777254726987, guid: 35189977db87d444380cb817aa7b4536, type: 3}
       propertyPath: m_Name
@@ -608,6 +628,14 @@ PrefabInstance:
     - target: {fileID: 7273594036198957951, guid: 35189977db87d444380cb817aa7b4536, type: 3}
       propertyPath: m_Intensity
       value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026784797845524164, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00971
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026784797845524164, guid: 35189977db87d444380cb817aa7b4536, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.01048
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

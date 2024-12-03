@@ -42,6 +42,10 @@
   <ItemGroup>
      <Compile Include="Assets\Script\PlayerCamera.cs" />
      <Compile Include="Assets\Script\CameraShaker.cs" />
+     <Compile Include="Assets\Script\SceneChanger.cs" />
+     <Compile Include="Assets\Script\Interactor.cs" />
+     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\TutorialManager.cs" />
+     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\GameManager.cs" />
      <Compile Include="Assets\Script\PlayerMovement.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.10f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
