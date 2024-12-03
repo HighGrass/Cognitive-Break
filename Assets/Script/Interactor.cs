@@ -7,17 +7,12 @@ public class Interactor : MonoBehaviour
 {
     // Start is called before the first frame update
     SceneChanger sceneChanger;
+    SphereCollider sphereCollider;
 
     private void Start()
     {
+        sphereCollider = GetComponent<SphereCollider>();
         sceneChanger = FindAnyObjectByType<SceneChanger>();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.GetComponent<PlayerMovement>())
-        {
-            sceneChanger.LoadSceneByName("EmotionScene");
-        }
-    }
 }

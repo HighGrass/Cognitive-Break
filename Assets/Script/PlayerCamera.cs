@@ -13,7 +13,7 @@ public class PlayerCamera : MonoBehaviour
     public float MaxBodyAngle = 90f;
 
     [Header("Realistic Rotation")]
-    public float MaxRealisticTilt = 5f; // Reduzido para evitar exageros
+    public float MaxRealisticTilt = 2f; // Reduzido para evitar exageros
     public float TiltIntensity = 1.2f; // Reduzido para menor impacto
 
     private float currentTiltAngle = 0f;

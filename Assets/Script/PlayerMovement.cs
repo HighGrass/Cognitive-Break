@@ -2,53 +2,68 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] public float moveSpeed = 2f; // Velocidade de movimento
-    private float MIN_SPEED = 5f;
-    private float MAX_SPEED = 8f;
-    private float SPRINT_SPEED = 12f;
-    private Vector2 moveInput; // Armazena o valor de movimento
-    private Rigidbody rb;
+    [SerializeField] public float moveSpeed = 2f; // Velocidade inicial
+    private const float MIN_SPEED = 3f;
+    private const float MAX_SPEED = 8f;
+    private const float SPRINT_SPEED = 12f;
+
+    private Vector3 moveDirection = Vector3.zero; // Direção de movimento
+    private Rigidbody rb; // Rigidbody 3D
     public bool Sprinting { get; private set; } = false;
 
-    private void Awake() // Mudei OnEnable para Awake
+    private void Awake()
     {
-        // Certifique-se de que o Rigidbody está ativo
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>(); // Certifique-se de usar Rigidbody 3D
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody não encontrado! Certifique-se de adicioná-lo ao objeto.");
+        }
     }
 
-    private void FixedUpdate() // Mudei Update para FixedUpdate
+    private void FixedUpdate()
     {
         Move();
     }
 
     private void Move()
     {
-        Vector3 moveInput = Vector3.zero;
-        bool tmp_sprinting = Sprinting;
-        Sprinting = Input.GetKey(KeyCode.LeftShift);
+        moveDirection = Vector3.zero; // Reinicia a direção
+        Sprinting = Input.GetKey(KeyCode.LeftShift); // Verifica sprint
 
-        if (tmp_sprinting && !Sprinting) // stopped sprinting
+        // Direções de movimento
+        if (Input.GetKey(KeyCode.W)) moveDirection += transform.forward; // Para frente
+        if (Input.GetKey(KeyCode.S)) moveDirection -= transform.forward; // Para trás
+        if (Input.GetKey(KeyCode.A)) moveDirection -= transform.right; // Para a esquerda
+        if (Input.GetKey(KeyCode.D)) moveDirection += transform.right; // Para a direita
+
+        if (moveDirection != Vector3.zero)
         {
-            moveSpeed = MAX_SPEED;
+            moveDirection = moveDirection.normalized; // Normaliza a direção
+
+            // Atualiza velocidade baseada em sprint
+            if (Sprinting)
+            {
+                moveSpeed = Mathf.Clamp(moveSpeed + Time.fixedDeltaTime * 7, MIN_SPEED, SPRINT_SPEED);
+            }
+            else
+            {
+                moveSpeed = Mathf.Clamp(moveSpeed + Time.fixedDeltaTime * 4, MIN_SPEED, MAX_SPEED);
+            }
+
+            // Move o Rigidbody com velocidade limitada
+            Vector3 newVelocity = moveDirection * moveSpeed;
+            newVelocity.y = rb.velocity.y; // Mantém o valor de gravidade no eixo Y
+            rb.velocity = newVelocity;
         }
-        else if (!tmp_sprinting && Sprinting) // started sprinting
+        else
         {
-            moveSpeed = SPRINT_SPEED;
+            // Desaceleração gradual quando o jogador para
+            Vector3 velocity = rb.velocity;
+            velocity.x *= 0.8f;
+            velocity.z *= 0.8f;
+            rb.velocity = velocity;
+
+            moveSpeed = Mathf.Clamp(moveSpeed - Time.fixedDeltaTime * 7, MIN_SPEED, MAX_SPEED);
         }
-
-        if (Input.GetKey(KeyCode.W)) moveInput += transform.forward; // Para frente
-        if (Input.GetKey(KeyCode.S)) moveInput -= transform.forward; // Para trás
-        if (Input.GetKey(KeyCode.A)) moveInput -= transform.right; // Para a esquerda
-        if (Input.GetKey(KeyCode.D)) moveInput += transform.right; // Para a direita
-
-
-        moveInput = moveInput.normalized;
-        if (moveInput == Vector3.zero) moveSpeed = Mathf.Clamp(moveSpeed - Time.fixedDeltaTime * 2, MIN_SPEED, MAX_SPEED);
-        else moveSpeed = Mathf.Clamp(moveSpeed + Time.fixedDeltaTime * 2, MIN_SPEED, MAX_SPEED);
-
-        if (Sprinting) moveSpeed = SPRINT_SPEED;
-
-        rb.velocity = moveInput * moveSpeed;
-
     }
 }
