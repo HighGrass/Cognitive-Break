@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] public float moveSpeed = 2f; // Velocidade inicial
+    [SerializeField]
+    public float moveSpeed = 2f; // Velocidade inicial
     private const float MIN_SPEED = 3f;
     private const float MAX_SPEED = 8f;
     private const float SPRINT_SPEED = 12f;
@@ -31,10 +32,14 @@ public class PlayerMovement : MonoBehaviour
         Sprinting = Input.GetKey(KeyCode.LeftShift); // Verifica sprint
 
         // Direções de movimento
-        if (Input.GetKey(KeyCode.W)) moveDirection += transform.forward; // Para frente
-        if (Input.GetKey(KeyCode.S)) moveDirection -= transform.forward; // Para trás
-        if (Input.GetKey(KeyCode.A)) moveDirection -= transform.right; // Para a esquerda
-        if (Input.GetKey(KeyCode.D)) moveDirection += transform.right; // Para a direita
+        if (Input.GetKey(KeyCode.W))
+            moveDirection += transform.forward; // Para frente
+        if (Input.GetKey(KeyCode.S))
+            moveDirection -= transform.forward; // Para trás
+        if (Input.GetKey(KeyCode.A))
+            moveDirection -= transform.right; // Para a esquerda
+        if (Input.GetKey(KeyCode.D))
+            moveDirection += transform.right; // Para a direita
 
         if (moveDirection != Vector3.zero)
         {
@@ -43,7 +48,11 @@ public class PlayerMovement : MonoBehaviour
             // Atualiza velocidade baseada em sprint
             if (Sprinting)
             {
-                moveSpeed = Mathf.Clamp(moveSpeed + Time.fixedDeltaTime * 7, MIN_SPEED, SPRINT_SPEED);
+                moveSpeed = Mathf.Clamp(
+                    moveSpeed + Time.fixedDeltaTime * 7,
+                    MIN_SPEED,
+                    SPRINT_SPEED
+                );
             }
             else
             {
