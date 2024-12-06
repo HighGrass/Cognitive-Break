@@ -293,20 +293,9 @@ public class GameManager : MonoBehaviour
         Vector3 v1n = NormalizeColorVector(v1) * GetColorSaturation(VectorToColor(v1));
         Vector3 v2n = NormalizeColorVector(v2) * GetColorSaturation(VectorToColor(v2));
 
-        //float colorLoss = 0.1f;
-
-        //v1 = new Vector3(Mathf.Clamp01(v1.x - colorLoss), Mathf.Clamp01(v1.y - colorLoss), Mathf.Clamp01(v1.z - colorLoss));
-        //v2 = new Vector3(Mathf.Clamp01(v2.x - colorLoss), Mathf.Clamp01(v2.y - colorLoss), Mathf.Clamp01(v2.z - colorLoss));
-
-        //Color sColor1 = ApplyGetColorSaturation(v1n, )
-
+        
         Vector3 fv;
 
-        /**
-                if (GetColorSaturation(VectorToColor(v1)) == 1) fv = v2 * 1.33f;
-                else if (GetColorSaturation(VectorToColor(v2)) == 1) fv = v1 * 1.33f;
-                else fv = v1 * importance1 + v2 * importance2;
-                **/
 
         v1n = ColorToVector(
             ApplyColorSaturation(

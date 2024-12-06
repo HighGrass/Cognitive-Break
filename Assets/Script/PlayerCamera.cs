@@ -17,6 +17,8 @@ public class PlayerCamera : MonoBehaviour
     public float TiltIntensity = 1.2f; // Reduzido para menor impacto
 
     private float currentTiltAngle = 0f;
+    MovementShaker movementShaker;
+    Vector3 cameraMovementShakeHistory = Vector3.zero;
 
     [SerializeField]
     SphereCollider detector;
@@ -24,6 +26,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnEnable()
     {
+        movementShaker = FindAnyObjectByType<MovementShaker>();
         detector = GetComponent<SphereCollider>();
     }
 
@@ -71,14 +74,15 @@ public class PlayerCamera : MonoBehaviour
 
     private void RotationTilt()
     {
-        Vector3 vector = transform.rotation.eulerAngles;
+        Vector3 vector = transform.rotation.eulerAngles - cameraMovementShakeHistory;
         vector.z = Mathf.Clamp(
-            Mathf.Lerp(currentTiltAngle, Mouse.current.delta.ReadValue().x, 0.03f),
+            Mathf.Lerp(currentTiltAngle, Mouse.current.delta.ReadValue().x, 0.08f),
             -MaxRealisticTilt,
             MaxRealisticTilt
         );
         currentTiltAngle = vector.z;
-        transform.rotation = Quaternion.Euler(vector);
+        cameraMovementShakeHistory = movementShaker.CameraShakeAngle;
+        transform.rotation = Quaternion.Euler(vector + movementShaker.CameraShakeAngle);
     }
 
     private void LimitRotation()
