@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    GameObject tmp_obj = null;
+    [SerializeField]
+    [Range(0, 255)]
+    float highlightIntensity = 20;
     MouseSystem mouseSystem;
+    public bool Running { get; private set; } = true;
+    GameObject tmp_obj = null;
     float animValue = 0;
     float raycastDistance = 7f;
 
@@ -52,6 +57,16 @@ public class PlayerInteraction : MonoBehaviour
             if (!mouseSystem.Interacting)
                 mouseSystem.StartInteraction();
             ChangeFamilyColor(tmp_obj.transform, true, animValue);
+
+            if (Input.GetMouseButton((int)MouseButton.Left))
+            {
+                CameraFix cameraFix = tmp_obj.GetComponent<CameraFix>();
+                if (cameraFix)
+                {
+                    cameraFix.LockCamera();
+                    Debug.Log("Camera locked on puzzle");
+                }
+            }
         }
         else
         {
@@ -126,9 +141,9 @@ public class PlayerInteraction : MonoBehaviour
                 Color color =
                     Cache_GetRenderDefaultColor(parent.gameObject, render)
                     + new Color(
-                        Mathf.Lerp(0, (float)50 / 100, animV),
-                        Mathf.Lerp(0, (float)50 / 100, animV),
-                        Mathf.Lerp(0, (float)50 / 100, animV),
+                        Mathf.Lerp(0, highlightIntensity / 100, animV),
+                        Mathf.Lerp(0, highlightIntensity / 100, animV),
+                        Mathf.Lerp(0, highlightIntensity / 100, animV),
                         0
                     );
                 try
@@ -149,9 +164,9 @@ public class PlayerInteraction : MonoBehaviour
                 Color color =
                     Cache_GetRenderDefaultColor(parent.gameObject, render)
                     + new Color(
-                        Mathf.Lerp(0, (float)50 / 100, animV),
-                        Mathf.Lerp(0, (float)50 / 100, animV),
-                        Mathf.Lerp(0, (float)50 / 100, animV),
+                        Mathf.Lerp(0, (float)20 / 100, animV),
+                        Mathf.Lerp(0, (float)20 / 100, animV),
+                        Mathf.Lerp(0, (float)20 / 100, animV),
                         0
                     );
                 try

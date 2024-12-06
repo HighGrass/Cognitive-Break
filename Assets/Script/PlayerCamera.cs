@@ -18,7 +18,9 @@ public class PlayerCamera : MonoBehaviour
 
     private float currentTiltAngle = 0f;
 
-    [SerializeField] SphereCollider detector;
+    [SerializeField]
+    SphereCollider detector;
+    public bool CameraLocked { get; private set; }
 
     private void OnEnable()
     {
@@ -27,6 +29,9 @@ public class PlayerCamera : MonoBehaviour
 
     private void Update()
     {
+        if (CameraLocked)
+            return;
+
         RotateHead();
         RotateBody();
         FixRotation();
@@ -94,7 +99,7 @@ public class PlayerCamera : MonoBehaviour
         transform.rotation = Quaternion.Euler(cRotation);
     }
 
+    public void LockCamera() => CameraLocked = true;
 
-
+    public void UnlockCamera() => CameraLocked = false;
 }
-

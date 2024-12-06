@@ -8,13 +8,15 @@ public class MouseSystem : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     public bool Interacting { get; private set; } = false;
+    public bool MouseVisible { get; private set; } = false;
+    public bool MouseLocked { get; private set; } = false;
     Image aimImage;
     public Vector3 TargetSize { get; private set; } = Vector3.one * 0.00005f;
 
     public void Awake()
     {
-        Cursor.visible = false;
         aimImage = GetComponent<Image>();
+        HideMouse();
     }
 
     public void StartInteraction()
@@ -39,5 +41,40 @@ public class MouseSystem : MonoBehaviour
             );
         else
             aimImage.transform.localScale = TargetSize;
+    }
+
+    public void ShowMouse()
+    {
+        Cursor.visible = true;
+        MouseVisible = true;
+
+        aimImage.color = Color.clear;
+    }
+
+    public void HideMouse()
+    {
+        Cursor.visible = false;
+        MouseVisible = false;
+
+        aimImage.color = new Color(1, 1, 1, 0.5f);
+    }
+
+    public void HideAll()
+    {
+        Cursor.visible = false;
+        MouseVisible = false;
+        aimImage.color = Color.clear;
+    }
+
+    public void LockMouse()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        MouseLocked = true;
+    }
+
+    public void UnlockMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        MouseLocked = false;
     }
 }

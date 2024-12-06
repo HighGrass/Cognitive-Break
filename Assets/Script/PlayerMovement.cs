@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public bool MovementLocked { get; private set; } = false;
+
     [SerializeField]
     public float moveSpeed = 2f; // Velocidade inicial
     private const float MIN_SPEED = 3f;
@@ -23,6 +25,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (MovementLocked)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
         Move();
     }
 
@@ -75,4 +82,8 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed = Mathf.Clamp(moveSpeed - Time.fixedDeltaTime * 7, MIN_SPEED, MAX_SPEED);
         }
     }
+
+    public void LockMovement() => MovementLocked = true;
+
+    public void UnlockMovement() => MovementLocked = false;
 }

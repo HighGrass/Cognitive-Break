@@ -66,11 +66,13 @@
   <ItemGroup>
     <Compile Include="Assets\Script\PlayerCamera.cs" />
     <Compile Include="Assets\Script\MouseSystem.cs" />
+    <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\EmotionGameManager.cs" />
     <Compile Include="Assets\Script\CameraShaker.cs" />
     <Compile Include="Assets\Script\SceneChanger.cs" />
     <Compile Include="Assets\Script\Interactor.cs" />
     <Compile Include="Assets\Script\PlayerInteraction.cs" />
     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\TutorialManager.cs" />
+    <Compile Include="Assets\Script\CameraFix.cs" />
     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\GameManager.cs" />
     <Compile Include="Assets\Script\PlayerMovement.cs" />
   </ItemGroup>
