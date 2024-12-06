@@ -84,9 +84,9 @@ public class PlayerCamera : MonoBehaviour
             transform.rotation.eulerAngles.y
         );
 
-        float finalAngle = angleDifference;
+        float initialAngle = angleDifference;
 
-        float m = angleDifference / Mathf.Abs(angleDifference);
+        float m = initialAngle == 0 ? 0 : initialAngle / Mathf.Abs(initialAngle);
 
         if (playerMovement.Speed < 0.01f) // body static
         {
@@ -96,16 +96,16 @@ public class PlayerCamera : MonoBehaviour
                     Mathf.Lerp(
                         transform.rotation.eulerAngles.y - 180 + m * 90f, // [ 1 / -1 ] * deltaTime
                         playerMovement.BodyRotationY,
-                        Mathf.Abs(finalAngle) / 180
+                        Mathf.Abs(initialAngle) / 180
                     )
                 );
             }
         }
 
-        angleDifference = Mathf.Lerp(angleDifference * 2, 0, Mathf.Abs(finalAngle) / 180);
+        angleDifference = Mathf.Lerp(angleDifference, 0, Mathf.Abs(initialAngle) / 180);
 
         vector.z = Mathf.Clamp(
-            Mathf.Lerp(currentTiltAngle, -angleDifference * 0.1f, 0.3f),
+            Mathf.Lerp(currentTiltAngle, -angleDifference * 0.1f, 0.05f),
             -MaxRealisticTilt,
             MaxRealisticTilt
         );
@@ -115,7 +115,7 @@ public class PlayerCamera : MonoBehaviour
 
         Debug.Log("BodyRotationY: " + playerMovement.BodyRotationY);
         Debug.Log("RealRotationY: " + transform.rotation.eulerAngles.y);
-        Debug.Log("AngleDifference: " + angleDifference);
+        Debug.Log("AngleDifference: " + initialAngle + " | " + angleDifference);
     }
 
     private float Deg2DualDeg(float degAngle) => 180 - LimitAngle360(degAngle); //  90 => 90 | 270 => -90
