@@ -3,9 +3,10 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public bool MovementLocked { get; private set; } = false;
+    public float BodyRotationY { get; private set; } = 0;
 
     [SerializeField]
-    public float moveSpeed = 2f; // Velocidade inicial
+    float moveSpeed = 2f; // Velocidade inicial
     private const float MIN_SPEED = 3f;
     private const float MAX_SPEED = 8f;
     private const float SPRINT_SPEED = 12f;
@@ -13,6 +14,11 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero; // Direção de movimento
     private Rigidbody rb; // Rigidbody 3D
     public bool Sprinting { get; private set; } = false;
+
+    public float Speed
+    {
+        get => rb.velocity.magnitude;
+    }
 
     private void Awake()
     {
@@ -23,7 +29,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    void Update()
+    {
+        if (MovementLocked)
+            BodyRotationY = transform.rotation.eulerAngles.y; // turn body to interaction object
+        else if (Speed > 0.01f)
+            BodyRotationY = Mathf.Atan2(rb.velocity.x, rb.velocity.z) * Mathf.Rad2Deg;
+
+    }
+
+    void FixedUpdate()
     {
         if (MovementLocked)
         {
@@ -86,4 +101,6 @@ public class PlayerMovement : MonoBehaviour
     public void LockMovement() => MovementLocked = true;
 
     public void UnlockMovement() => MovementLocked = false;
+
+    public void SetBodyRotationY(float degreeAngle) => BodyRotationY = degreeAngle;
 }
