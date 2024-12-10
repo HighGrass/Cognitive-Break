@@ -25,6 +25,10 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField]
     LayerMask layerMask;
 
+    public void StartRunning() => Running = true;
+
+    public void StopRunning() => Running = false;
+
     void Awake()
     {
         mouseSystem = FindAnyObjectByType<MouseSystem>();
@@ -32,6 +36,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (!Running)
+            return;
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
         if (
@@ -65,6 +71,13 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     cameraFix.LockCamera();
                     Debug.Log("Camera locked on puzzle");
+
+                    EmotionGameManager emotionGameManager =
+                        tmp_obj.GetComponent<EmotionGameManager>(); // emotion puzzle
+                    if (emotionGameManager)
+                    {
+                        emotionGameManager.StartRunning();
+                    }
                 }
             }
         }
@@ -78,6 +91,7 @@ public class PlayerInteraction : MonoBehaviour
                 StartCoroutine(ResetToDefaultColor(tmp_obj, animValue));
                 tmp_obj = null;
             }
+
             Debug.DrawRay(
                 transform.position,
                 transform.TransformDirection(Vector3.forward) * raycastDistance,

@@ -1,14 +1,22 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class EmotionGameManager : MonoBehaviour
+public class EmotionGameManager : MonoBehaviour, IPuzzle
 {
     public bool Running { get; private set; } = false;
     public bool PuzzleStarted { get; private set; } = false;
     bool LevelCompleted = false;
+    bool piecesActive;
+    Dictionary<MeshRenderer, Coroutine> movingPieces = new Dictionary<MeshRenderer, Coroutine>();
+
+    [SerializeField]
+    Image colorPicker;
 
     [SerializeField]
     MeshRenderer[] PlayerPieces;
@@ -23,14 +31,8 @@ public class EmotionGameManager : MonoBehaviour
     public MeshRenderer[] PickPieces;
 
     [SerializeField]
-    MeshRenderer HoldingPiece;
-
-    [SerializeField]
     MeshRenderer IndicatorPiece;
 
-    [SerializeField]
-    MeshRenderer Overlay;
-    Color overlayColor;
     MeshRenderer IndicatorCoverPiece;
 
     [SerializeField]
@@ -45,10 +47,18 @@ public class EmotionGameManager : MonoBehaviour
     Color TargetColor = LevelColors[0];
     float TimeDebugger = 0.5f;
     private float colorSum;
-    Color holdingColor = Color.white;
+    public Color HoldingColor { get; private set; } = Color.white;
+
+    [SerializeField]
+    LayerMask layerMask;
+    PlayerInteraction playerInteraction;
+    MouseSystem mouseSystem;
 
     void Start()
     {
+        playerInteraction = FindAnyObjectByType<PlayerInteraction>();
+        mouseSystem = FindAnyObjectByType<MouseSystem>();
+
         for (int i = 0; i < LevelColors.Length; i++)
         {
             LevelColors[i] = VectorToColor(
@@ -73,105 +83,90 @@ public class EmotionGameManager : MonoBehaviour
 
         if (Running && !PuzzleStarted) // Start puzzle
         {
-            StartCoroutine(StartLevel(2, 100));
+            StartCoroutine(StartLevel());
             PuzzleStarted = true;
         }
         else if (!Running)
             return;
 
         TimeDebugger = Mathf.Clamp(TimeDebugger - Time.deltaTime, 0, 0.5f);
+
+        // --------- Raycast ---------
+
+        float raycastDistance = 10;
+        Vector3 mousePos = Input.mousePosition;
+
+        Ray mouseRay = Camera.main.ScreenPointToRay(mousePos);
+        Vector3 worldPoint = mouseRay.GetPoint(raycastDistance);
+
+        Vector3 direction = (worldPoint - Camera.main.transform.position).normalized;
+
+        // --------- ------- ---------
+
+
+        MeshRenderer renderHit = null;
+
+        RaycastHit hit;
+        if (
+            Physics.Raycast(
+                Camera.main.transform.position,
+                direction,
+                out hit,
+                raycastDistance,
+                layerMask
+            )
+        )
+        {
+            renderHit = hit.collider.gameObject.GetComponent<MeshRenderer>();
+            Debug.DrawRay(Camera.main.transform.position, direction * hit.distance, Color.yellow);
+        }
+        else
+        {
+            Debug.DrawRay(Camera.main.transform.position, direction * raycastDistance, Color.white);
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (holdingColor == Color.white)
+            if (renderHit)
             {
-                foreach (MeshRenderer MeshRenderer in PickPieces)
-                {
-                    float distance = Vector3.Distance(
-                        Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                        MeshRenderer.transform.parent.position
-                    );
+                MeshRenderer render = hit.collider.gameObject.GetComponent<MeshRenderer>();
 
-                    if (distance <= 11f)
-                    {
-                        holdingColor = MeshRenderer.material.GetColor("_Color");
-                        HoldingPiece.material.SetColor("_Color", holdingColor);
-                        Vector3 vector = new Vector3(
-                            Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
-                            Camera.main.ScreenToWorldPoint(Input.mousePosition).y,
-                            -1
-                        );
-                        HoldingPiece.transform.parent.position = vector;
-                    }
+                if (PickPieces.Contains(render))
+                {
+                    HoldingColor = render.material.GetColor("_Color");
+                    if (mouseSystem.MouseVisible)
+                        mouseSystem.HideMouse();
+                    Debug.LogWarning("Holding Color");
                 }
             }
         }
         else if (Input.GetMouseButton(0))
         {
-            if (holdingColor != Color.white)
+            if (HoldingColor != Color.white)
             {
-                Vector3 vector = new Vector3(
-                    Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
-                    Camera.main.ScreenToWorldPoint(Input.mousePosition).y,
-                    -1
-                );
-                HoldingPiece.transform.parent.position = vector;
-
-                foreach (MeshRenderer MeshRenderer in PlayerPieces)
-                {
-                    float distance = Vector3.Distance(
-                        Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                        MeshRenderer.transform.parent.position
-                    );
-
-                    if (distance <= 11f)
-                    {
-                        HoldingPiece.transform.parent.position = MeshRenderer
-                            .transform
-                            .parent
-                            .position;
-                    }
-                }
+                colorPicker.gameObject.transform.position = worldPoint - direction * 9;
+                colorPicker.color = HoldingColor;
             }
+
+            if (renderHit) { }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+            if (!mouseSystem.MouseVisible)
+                mouseSystem.ShowMouse();
+            colorPicker.gameObject.transform.position = -Vector3.one * 1000;
             if (TimeDebugger > 0)
                 return;
-            if (holdingColor != Color.white)
-            {
-                for (int i = 0; i < PlayerPieces.Length; i++)
-                {
-                    float distance = Vector3.Distance(
-                        Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                        PlayerPieces[i].transform.parent.position
-                    );
-                    if (distance <= 11f)
-                    {
-                        PlayerPieces[i].material.SetColor("_Color", holdingColor);
-                        UpdateGraph();
-                    }
-                }
-                holdingColor = Color.white;
 
-                HoldingPiece.material.SetColor("_Color", Color.white);
-                HoldingPiece.transform.parent.position = new Vector3(10000, 10000, 0);
+            if (PlayerPieces.Contains(renderHit))
+            {
+                renderHit.material.SetColor("_Color", HoldingColor);
+                HoldingColor = Color.white;
+                UpdateGraph();
             }
             else
-            {
-                for (int i = 0; i < PlayerPieces.Length; i++)
-                {
-                    float distance = Vector3.Distance(
-                        Camera.main.ScreenToWorldPoint(Input.mousePosition),
-                        PlayerPieces[i].transform.parent.position
-                    );
-                    if (distance <= 11f)
-                    {
-                        PlayerPieces[i].material.SetColor("_Color", Color.white);
-                        UpdateGraph();
-                    }
-                }
-            }
+                HoldingColor = Color.white;
         }
     }
 
@@ -180,8 +175,8 @@ public class EmotionGameManager : MonoBehaviour
 
     private IEnumerator RestartMapBoard(float timeMultiplier, bool showIndicator = true)
     {
-        Color middleColor = new Color(1, 1, 1, 0.1f);
-        Color centralColor = new Color(1, 1, 1, 0.5f);
+        Color middleColor = new Color(0.1f, 0.1f, 0.1f, 1f);
+        Color centralColor = new Color(0.5f, 0.5f, 0.5f, 1);
 
         yield return new WaitForSeconds(1 * timeMultiplier);
         foreach (MeshRenderer render in PlayerPieces)
@@ -252,7 +247,7 @@ public class EmotionGameManager : MonoBehaviour
             playerPiecesSum += VectorSum(ColorToVector(MeshRenderer.material.GetColor("_Color")));
         }
 
-        if (playerPiecesSum == 3 * 4)
+        if (playerPiecesSum == 3 * 4) // all white
         {
             StartCoroutine(RestartMapBoard(0));
             return;
@@ -542,67 +537,28 @@ public class EmotionGameManager : MonoBehaviour
             {
                 IndicatorPiece.material.SetColor("_Color", Color.white);
                 StartCoroutine(RestartMapBoard(1, false));
-                StartCoroutine(FinishLevel(2, 100));
+                StartCoroutine(FinishLevel());
             }
         }
         return;
     }
 
-    IEnumerator StartLevel(float time, int divisions)
+    IEnumerator StartLevel()
     {
-        Overlay.enabled = true;
-        Overlay.material.SetColor("_Color", overlayColor);
-        float deltaAlpha = (float)time / divisions;
-
-        for (int i = 0; i < divisions; i++)
-        {
-            yield return new WaitForSeconds(time / divisions);
-
-            Overlay.material.SetColor(
-                "_Color",
-                new Color(
-                    Overlay.material.GetColor("_Color").r,
-                    Overlay.material.GetColor("_Color").g,
-                    Overlay.material.GetColor("_Color").b,
-                    (divisions - i) * deltaAlpha
-                )
-            );
-        }
-        Overlay.enabled = false;
         LevelCompleted = false;
+        Debug.Log("Emotion puzzle started");
+
+        yield break;
     }
 
-    IEnumerator FinishLevel(float time, int divisions)
+    IEnumerator FinishLevel()
     {
-        yield return new WaitForSeconds(2);
         LevelCompleted = true;
-        Overlay.material.SetColor(
-            "_Color",
-            new Color(overlayColor.r, overlayColor.g, overlayColor.b, 0)
-        );
-        float deltaAlpha = (float)time / divisions;
-        Overlay.enabled = true;
 
-        for (int i = 0; i < divisions; i++)
-        {
-            yield return new WaitForSeconds(time / divisions);
-
-            Overlay.material.SetColor(
-                "_Color",
-                new Color(
-                    Overlay.material.GetColor("_Color").r,
-                    Overlay.material.GetColor("_Color").g,
-                    Overlay.material.GetColor("_Color").b,
-                    i * deltaAlpha
-                )
-            );
-        }
-
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         //Application.Quit();
 
-        SceneChanger sceneManager = FindAnyObjectByType<SceneChanger>();
-        sceneManager.LoadSceneByName("MainScene");
+        StopRunning();
     }
 
     Color GetMaterialColor(GameObject obj)
@@ -621,7 +577,100 @@ public class EmotionGameManager : MonoBehaviour
         return meshRenderer.material.GetColor("_Color");
     }
 
-    public void StartRunning() => Running = true;
+    public void OnExitPuzzle() => StopRunning();
 
-    public void StopRunning() => Running = false;
+    public void StartRunning()
+    {
+        ActivatePieces();
+        Running = true;
+    }
+
+    public void StopRunning()
+    {
+        Running = false;
+        playerInteraction.StartRunning();
+        DeactivatePieces();
+    }
+
+    void ActivatePieces()
+    {
+        if (piecesActive)
+            return;
+        piecesActive = true;
+        foreach (MeshRenderer render in PlayerPieces)
+        {
+            ScalePiece(render, 150);
+        }
+
+        foreach (MeshRenderer render in MiddlePieces)
+        {
+            ScalePiece(render, 50);
+        }
+
+        foreach (MeshRenderer render in PickPieces)
+        {
+            ScalePiece(render, 50);
+        }
+        ScalePiece(FinalPiece.GetComponent<MeshRenderer>(), 100f);
+    }
+
+    void DeactivatePieces()
+    {
+        if (!piecesActive)
+            return;
+        piecesActive = false;
+        foreach (MeshRenderer render in PlayerPieces)
+        {
+            ScalePiece(render, 3);
+        }
+
+        foreach (MeshRenderer render in MiddlePieces)
+        {
+            ScalePiece(render, 3);
+        }
+
+        foreach (MeshRenderer render in PickPieces)
+        {
+            ScalePiece(render, 3);
+        }
+        ScalePiece(FinalPiece.GetComponent<MeshRenderer>(), 3);
+    }
+
+    IEnumerator ScalePieceCoroutine(MeshRenderer piece, float finalSize, float speed)
+    {
+        while (Mathf.Abs(piece.gameObject.transform.localScale.z - finalSize) > 0.1f)
+        {
+            piece.gameObject.transform.localScale =
+                piece.gameObject.transform.localScale
+                + new Vector3(
+                    0,
+                    0,
+                    (finalSize - piece.gameObject.transform.localScale.z) * speed * Time.deltaTime
+                );
+            yield return null;
+        }
+        yield break;
+    }
+
+    void ScalePiece(MeshRenderer piece, float finalSize = 3f, float speed = 1f)
+    {
+        foreach (KeyValuePair<MeshRenderer, Coroutine> pieceInfo in movingPieces)
+        {
+            if (pieceInfo.Key == piece)
+            {
+                try
+                {
+                    StopCoroutine(pieceInfo.Value);
+                }
+                catch { }
+                movingPieces.Remove(pieceInfo.Key);
+
+                break;
+            }
+        }
+
+        Coroutine newCoroutine = StartCoroutine(ScalePieceCoroutine(piece, finalSize, speed));
+        movingPieces.Add(piece, newCoroutine);
+        return;
+    }
 }

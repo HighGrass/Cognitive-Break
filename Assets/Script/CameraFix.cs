@@ -26,12 +26,20 @@ public class CameraFix : MonoBehaviour
     MouseSystem mouseSystem;
     PlayerCamera playerCamera;
     PlayerMovement playerMovement;
+    PlayerInteraction playerInteraction;
+    IPuzzle thisPuzzle;
 
     public void Start()
     {
+        playerInteraction = FindAnyObjectByType<PlayerInteraction>();
         mouseSystem = FindAnyObjectByType<MouseSystem>();
         playerCamera = FindAnyObjectByType<PlayerCamera>();
         playerMovement = FindAnyObjectByType<PlayerMovement>();
+
+        if (GetComponent<EmotionGameManager>())
+        {
+            thisPuzzle = GetComponent<EmotionGameManager>();
+        }
     }
 
     public void Update()
@@ -49,8 +57,7 @@ public class CameraFix : MonoBehaviour
             case CameraState.Locked:
                 if (stateHistory != CameraState.Locked) // First Locked
                 { // start puzzle
-                    EmotionGameManager emotionGameManager = FindAnyObjectByType<EmotionGameManager>();
-                    emotionGameManager.StartRunning();
+                    thisPuzzle.StartRunning();
                 }
                 mouseSystem.ShowMouse();
                 break;
@@ -61,6 +68,7 @@ public class CameraFix : MonoBehaviour
 
                 playerCamera.UnlockCamera();
                 playerMovement.UnlockMovement();
+                playerInteraction.StartRunning();
 
                 break;
 
@@ -68,6 +76,8 @@ public class CameraFix : MonoBehaviour
                 playerCamera.LockCamera();
                 playerMovement.LockMovement();
                 mouseSystem.HideAll();
+
+                playerInteraction.StopRunning();
 
                 Camera.main.transform.position = Vector3.Slerp(
                     Camera.main.transform.position,
@@ -90,6 +100,8 @@ public class CameraFix : MonoBehaviour
                 playerCamera.LockCamera();
                 playerMovement.LockMovement();
                 mouseSystem.HideAll();
+
+                thisPuzzle.OnExitPuzzle();
 
                 Camera.main.transform.position = Vector3.Slerp(
                     Camera.main.transform.position,

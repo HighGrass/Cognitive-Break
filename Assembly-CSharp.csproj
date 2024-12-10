@@ -73,6 +73,7 @@
     <Compile Include="Assets\Script\PlayerInteraction.cs" />
     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\TutorialManager.cs" />
     <Compile Include="Assets\Script\CameraFix.cs" />
+    <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\IPuzzle.cs" />
     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\GameManager.cs" />
     <Compile Include="Assets\Script\PlayerMovement.cs" />
   </ItemGroup>
