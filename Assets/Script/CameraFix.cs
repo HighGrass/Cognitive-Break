@@ -55,15 +55,16 @@ public class CameraFix : MonoBehaviour
         switch (State)
         {
             case CameraState.Locked:
-                if (stateHistory != CameraState.Locked) // First Locked
+                if (stateHistory != CameraState.Locked) // first frame
                 { // start puzzle
                     thisPuzzle.StartRunning();
+                    mouseSystem.ShowMouse();
                 }
-                mouseSystem.ShowMouse();
                 break;
 
             case CameraState.Unlocked:
-                mouseSystem.HideMouse();
+                if (mouseSystem.MouseVisible)
+                    mouseSystem.HideMouse();
                 mouseSystem.UnlockMouse();
 
                 playerCamera.UnlockCamera();
@@ -73,11 +74,13 @@ public class CameraFix : MonoBehaviour
                 break;
 
             case CameraState.Locking:
-                playerCamera.LockCamera();
-                playerMovement.LockMovement();
-                mouseSystem.HideAll();
-
-                playerInteraction.StopRunning();
+                if (stateHistory != CameraState.Locking) // first frame
+                {
+                    mouseSystem.HideAll();
+                    playerCamera.LockCamera();
+                    playerMovement.LockMovement();
+                    playerInteraction.StopRunning();
+                }
 
                 Camera.main.transform.position = Vector3.Slerp(
                     Camera.main.transform.position,
@@ -93,6 +96,7 @@ public class CameraFix : MonoBehaviour
 
                 if (Vector3.Distance(Camera.main.transform.position, targetWorldPosition) < 0.1f)
                     State = CameraState.Locked;
+                Debug.Log("CameraLocked");
 
                 break;
 
@@ -123,6 +127,7 @@ public class CameraFix : MonoBehaviour
             default:
                 break;
         }
+        stateHistory = State;
     }
 
     public void LockCamera()

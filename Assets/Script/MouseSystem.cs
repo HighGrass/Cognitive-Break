@@ -49,6 +49,7 @@ public class MouseSystem : MonoBehaviour
         MouseVisible = true;
 
         aimImage.color = Color.clear;
+        Debug.Log("MOUSE - ShowMouse()");
     }
 
     public void HideMouse()
@@ -57,6 +58,7 @@ public class MouseSystem : MonoBehaviour
         MouseVisible = false;
 
         aimImage.color = new Color(1, 1, 1, 0.5f);
+        Debug.Log("MOUSE - HideMouse()");
     }
 
     public void HideAll()
@@ -64,6 +66,7 @@ public class MouseSystem : MonoBehaviour
         Cursor.visible = false;
         MouseVisible = false;
         aimImage.color = Color.clear;
+        Debug.Log("MOUSE - HideAll()");
     }
 
     public void LockMouse()

@@ -37,6 +37,9 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
     [SerializeField]
     float MIN_COLOR_DIFFERENCE;
+
+    GameObject playerPieceHistory;
+
     static Color[] LevelColors = new Color[4]
     {
         new Color(0.870f, 0.432f, 0.167f, 1.000f), // orange
@@ -53,9 +56,11 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     LayerMask layerMask;
     PlayerInteraction playerInteraction;
     MouseSystem mouseSystem;
+    Narrator narrator;
 
     void Start()
     {
+        narrator = FindAnyObjectByType<Narrator>();
         playerInteraction = FindAnyObjectByType<PlayerInteraction>();
         mouseSystem = FindAnyObjectByType<MouseSystem>();
 
@@ -76,7 +81,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         //HoldingPiece.enabled = false;
     }
 
-    private void Update()
+    void Update()
     {
         if (LevelCompleted)
             return;
@@ -134,9 +139,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
                 if (PickPieces.Contains(render))
                 {
                     HoldingColor = render.material.GetColor("_Color");
-                    if (mouseSystem.MouseVisible)
-                        mouseSystem.HideMouse();
-                    Debug.LogWarning("Holding Color");
+                    mouseSystem.HideAll();
                 }
             }
         }
@@ -148,13 +151,36 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
                 colorPicker.color = HoldingColor;
             }
 
-            if (renderHit) { }
+            if (renderHit)
+            { // piece animation
+                if (PlayerPieces.Contains(renderHit)) // is a Player Piece
+                {
+                    if (renderHit.gameObject != playerPieceHistory)
+                    {
+                        if (playerPieceHistory != null)
+                        {
+                            ScalePiece(playerPieceHistory.GetComponent<MeshRenderer>(), 150, 10);
+                        }
+                        ScalePiece(renderHit.gameObject.GetComponent<MeshRenderer>(), 120, 10);
+                        playerPieceHistory = renderHit.gameObject;
+                    } // is new
+                }
+            }
+            else if (playerPieceHistory != null)
+            {
+                ScalePiece(playerPieceHistory.GetComponent<MeshRenderer>(), 150, 10);
+                playerPieceHistory = null;
+            }
+        }
+        else if (playerPieceHistory != null)
+        {
+            ScalePiece(playerPieceHistory.GetComponent<MeshRenderer>(), 150, 10);
+            playerPieceHistory = null;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (!mouseSystem.MouseVisible)
-                mouseSystem.ShowMouse();
+            mouseSystem.ShowMouse();
             colorPicker.gameObject.transform.position = -Vector3.one * 1000;
             if (TimeDebugger > 0)
                 return;
@@ -547,6 +573,14 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     {
         LevelCompleted = false;
         Debug.Log("Emotion puzzle started");
+        string firsttext = "Lets see if you can describe your fellings!";
+        narrator.Say(firsttext);
+        narrator.Say(
+            "Start by creating a <color="
+                + ColorUtils.ColorToHex(LevelColors[0])
+                + ">happy</color> color.",
+            narrator.SpeechTime(firsttext) + 2f
+        );
 
         yield break;
     }
@@ -582,6 +616,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     public void StartRunning()
     {
         ActivatePieces();
+        mouseSystem.ShowMouse();
         Running = true;
     }
 
@@ -589,6 +624,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     {
         Running = false;
         playerInteraction.StartRunning();
+        mouseSystem.HideMouse();
         DeactivatePieces();
     }
 
@@ -604,7 +640,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
         foreach (MeshRenderer render in MiddlePieces)
         {
-            ScalePiece(render, 50);
+            ScalePiece(render, 125);
         }
 
         foreach (MeshRenderer render in PickPieces)

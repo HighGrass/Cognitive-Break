@@ -64,12 +64,16 @@ public class PlayerInteraction : MonoBehaviour
                 mouseSystem.StartInteraction();
             ChangeFamilyColor(tmp_obj.transform, true, animValue);
 
-            if (Input.GetMouseButton((int)MouseButton.Left))
+            if (Input.GetMouseButtonDown((int)MouseButton.Left))
             {
                 CameraFix cameraFix = tmp_obj.GetComponent<CameraFix>();
                 if (cameraFix)
                 {
-                    cameraFix.LockCamera();
+                    if (
+                        cameraFix.State != CameraFix.CameraState.Locking
+                        && cameraFix.State != CameraFix.CameraState.Locked
+                    )
+                        cameraFix.LockCamera();
                     Debug.Log("Camera locked on puzzle");
 
                     EmotionGameManager emotionGameManager =
