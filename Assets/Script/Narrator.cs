@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -11,10 +12,20 @@ public class Narrator : MonoBehaviour
     float spaceWrittingDelay = 0.1f;
     AudioSource audioSource;
 
+    public enum FraseType
+    {
+        None,
+        Wait,
+    }
+
+    Dictionary<Coroutine, FraseType> Queue = new Dictionary<Coroutine, FraseType>();
+
     private void Awake()
     {
         textComponent = GetComponentInChildren<TMP_Text>();
         audioSource = GetComponent<AudioSource>();
+
+        StartQueue();
     }
 
     private void FixedUpdate()
@@ -23,9 +34,28 @@ public class Narrator : MonoBehaviour
             textComponent.text = CurrentText;
     }
 
-    public void Say(string text, float delay = 0)
+    void StartQueue() => StartCoroutine(ManageQueue());
+
+    IEnumerator ManageQueue()
     {
-        StartCoroutine(WriteText(text, delay));
+        if (Queue.Count <= 0) // every frame
+            yield return null;
+    }
+
+    IEnumerator SkipQueue()
+    {
+        yield break;
+    }
+
+    IEnumerator StopQueue()
+    {
+        yield break;
+    }
+
+    public void Say(string text, FraseType type, float delay = 0)
+    {
+        Coroutine coroutine = StartCoroutine(WriteText(text, delay));
+        Queue.Add(coroutine, type);
     }
 
     public IEnumerator WriteText(string text, float waitTime = 0)

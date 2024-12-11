@@ -299,6 +299,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         VerifyResult();
     }
 
+
     private Color GetFinalColor(Color[] colors)
     {
         Vector3 newColor = new Vector3(0, 0, 0);
@@ -574,11 +575,12 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         LevelCompleted = false;
         Debug.Log("Emotion puzzle started");
         string firsttext = "Lets see if you can describe your fellings!";
-        narrator.Say(firsttext);
+        narrator.Say(firsttext, Narrator.FraseType.None);
         narrator.Say(
             "Start by creating a <color="
                 + ColorUtils.ColorToHex(LevelColors[0])
                 + ">happy</color> color.",
+            Narrator.FraseType.Wait,
             narrator.SpeechTime(firsttext) + 2f
         );
 
