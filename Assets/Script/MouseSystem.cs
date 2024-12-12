@@ -10,6 +10,7 @@ public class MouseSystem : MonoBehaviour
     public bool Interacting { get; private set; } = false;
     public bool MouseVisible { get; private set; } = false;
     public bool MouseLocked { get; private set; } = false;
+    public float AimSpeed { get; } = 1f;
     Image aimImage;
     public Vector3 TargetSize { get; private set; } = Vector3.one * 0.00005f;
 
@@ -33,11 +34,11 @@ public class MouseSystem : MonoBehaviour
 
     public void Update()
     {
-        if (Vector3.Distance(aimImage.transform.localScale, TargetSize) > 0.0001)
+        if (Vector3.Distance(aimImage.transform.localScale, TargetSize) > 0.00001)
             aimImage.transform.localScale = Vector3.Slerp(
                 aimImage.transform.localScale,
                 TargetSize,
-                0.1f
+                AimSpeed * 0.1f
             );
         else
             aimImage.transform.localScale = TargetSize;

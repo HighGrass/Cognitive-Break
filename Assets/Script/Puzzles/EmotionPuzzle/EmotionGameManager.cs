@@ -14,6 +14,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     bool LevelCompleted = false;
     bool piecesActive;
     Dictionary<MeshRenderer, Coroutine> movingPieces = new Dictionary<MeshRenderer, Coroutine>();
+    int CurrentColor { get; } = 0;
 
     [SerializeField]
     Image colorPicker;
@@ -36,17 +37,42 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     MeshRenderer IndicatorCoverPiece;
 
     [SerializeField]
-    float MIN_COLOR_DIFFERENCE;
+    float MIN_COLOR_DIFFERENCE = 0.001f;
 
     GameObject playerPieceHistory;
 
     static Color[] LevelColors = new Color[4]
     {
-        new Color(0.870f, 0.432f, 0.167f, 1.000f), // orange
-        new Color(0.793f, 0.374f, 0.793f, 1.000f), // purple
-        new Color(0.490f, 0.000f, 0.490f, 1.000f), // magenta
-        new Color(0.350f, 0.805f, 0.805f, 1.000f), // cian
+        new Color(0.350f, 0.805f, 0.805f, 1.000f), // cian - felicidade
+        new Color(0.793f, 0.374f, 0.793f, 1.000f), // purple - tristeza
+        new Color(0.870f, 0.432f, 0.167f, 1.000f), // orange - raiva
+        new Color(0.490f, 0.000f, 0.490f, 1.000f), // magenta - medo
     };
+
+    string[] ColorSpeeches = new string[4]
+    {
+        "Start by creating a <color="
+            + ColorUtils.ColorToHex(LevelColors[0])
+            + ">happy</color> color",
+        "Now, try a <color=" + ColorUtils.ColorToHex(LevelColors[1]) + ">sadder</color> one",
+        "How think of a color that reminds you of  <color="
+            + ColorUtils.ColorToHex(LevelColors[2])
+            + ">anger</color>",
+        "How about a <color=" + ColorUtils.ColorToHex(LevelColors[3]) + ">scary</color> one?",
+    };
+    Dictionary<MeshRenderer, float> PiecesScale = new Dictionary<MeshRenderer, float>();
+
+    void Cache_CreatePiecesScale()
+    {
+        List<MeshRenderer> allPieces = GetAllPieces(PieceOrderType.none);
+        foreach (MeshRenderer render in allPieces)
+        {
+            PiecesScale.Add(render, render.gameObject.transform.localScale.z);
+        }
+    }
+
+    void Cache_UpdatePieceScale(MeshRenderer piece, float newSize) => PiecesScale[piece] = newSize;
+
     Color TargetColor = LevelColors[0];
     float TimeDebugger = 0.5f;
     private float colorSum;
@@ -78,6 +104,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         IndicatorCoverPiece =
             IndicatorPiece.transform.parent.GetComponentInChildren<MeshRenderer>();
 
+        Cache_CreatePiecesScale();
         //HoldingPiece.enabled = false;
     }
 
@@ -190,6 +217,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
                 renderHit.material.SetColor("_Color", HoldingColor);
                 HoldingColor = Color.white;
                 UpdateGraph();
+                StartCoroutine(AnimateAllPieces(renderHit));
             }
             else
                 HoldingColor = Color.white;
@@ -287,6 +315,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
             colors[i] = MiddlePieces[i].material.GetColor("_Color");
         }
         FinalPiece.material.SetColor("_Color", GetFinalColor(colors));
+        /*
         Debug.Log(
             "Difference: "
                 + VectorSum(
@@ -295,10 +324,9 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
                     )
                 )
         );
-
+        */
         VerifyResult();
     }
-
 
     private Color GetFinalColor(Color[] colors)
     {
@@ -548,7 +576,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     public void VerifyResult()
     {
         float cDifference = CompareColors(FinalPiece.material.GetColor("_Color"), TargetColor);
-        Debug.Log("Difference: " + cDifference);
+
         if (cDifference <= MIN_COLOR_DIFFERENCE)
         { // correct color
             if (GetCurrentColorLevelIndex(TargetColor) + 1 < LevelColors.Length) // Next Color
@@ -575,14 +603,8 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         LevelCompleted = false;
         Debug.Log("Emotion puzzle started");
         string firsttext = "Lets see if you can describe your fellings!";
-        narrator.Say(firsttext, Narrator.FraseType.None);
-        narrator.Say(
-            "Start by creating a <color="
-                + ColorUtils.ColorToHex(LevelColors[0])
-                + ">happy</color> color.",
-            Narrator.FraseType.Wait,
-            narrator.SpeechTime(firsttext) + 2f
-        );
+        narrator.Say(firsttext, Narrator.FraseType.None, 1.5f);
+        narrator.Say(ColorSpeeches[CurrentColor], Narrator.FraseType.Wait);
 
         yield break;
     }
@@ -620,6 +642,10 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         ActivatePieces();
         mouseSystem.ShowMouse();
         Running = true;
+
+        narrator.SkipQueue();
+        if (PuzzleStarted)
+            narrator.Say(ColorSpeeches[CurrentColor], Narrator.FraseType.Wait, 1.5f);
     }
 
     public void StopRunning()
@@ -628,6 +654,11 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         playerInteraction.StartRunning();
         mouseSystem.HideMouse();
         DeactivatePieces();
+        narrator.SkipQueue();
+        narrator.ClearText();
+
+        HoldingColor = Color.white;
+        colorPicker.gameObject.transform.position = Vector3.one * 10000;
     }
 
     void ActivatePieces()
@@ -637,7 +668,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         piecesActive = true;
         foreach (MeshRenderer render in PlayerPieces)
         {
-            ScalePiece(render, 150);
+            ScalePiece(render, 200);
         }
 
         foreach (MeshRenderer render in MiddlePieces)
@@ -690,7 +721,12 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         yield break;
     }
 
-    void ScalePiece(MeshRenderer piece, float finalSize = 3f, float speed = 1f)
+    void ScalePiece(
+        MeshRenderer piece,
+        float finalSize = 50f,
+        float speed = 1f,
+        bool updateVar = true
+    )
     {
         foreach (KeyValuePair<MeshRenderer, Coroutine> pieceInfo in movingPieces)
         {
@@ -709,6 +745,221 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
         Coroutine newCoroutine = StartCoroutine(ScalePieceCoroutine(piece, finalSize, speed));
         movingPieces.Add(piece, newCoroutine);
+
+        if (updateVar)
+            Cache_UpdatePieceScale(piece, finalSize);
+
         return;
+    }
+
+    enum PieceOrderType
+    {
+        none,
+        basic,
+        interaction,
+    };
+
+    float[,] interactionPieceOrder = new float[3, 4]
+    {
+        { 3, 2, 2, 3 },
+        { 2, 1, 2, 0 },
+        { 3, 2, 2, 3 },
+    };
+
+    List<MeshRenderer> GetAllPieces(PieceOrderType orderType, int playerPieceIndex = 0)
+    {
+        List<MeshRenderer> pieces = new List<MeshRenderer>();
+
+        switch (orderType)
+        {
+            case PieceOrderType.none:
+                foreach (MeshRenderer render in PlayerPieces)
+                {
+                    pieces.Add(render);
+                }
+                foreach (MeshRenderer render in MiddlePieces)
+                {
+                    pieces.Add(render);
+                }
+                pieces.Add(FinalPiece);
+
+                break;
+
+            case PieceOrderType.basic:
+                pieces.Add(PlayerPieces[0]);
+                pieces.Add(MiddlePieces[0]);
+                pieces.Add(PlayerPieces[3]);
+
+                pieces.Add(MiddlePieces[2]);
+                pieces.Add(FinalPiece);
+                pieces.Add(MiddlePieces[4]);
+
+                pieces.Add(MiddlePieces[3]);
+                pieces.Add(MiddlePieces[1]);
+                pieces.Add(MiddlePieces[5]);
+
+                pieces.Add(PlayerPieces[1]);
+                pieces.Add(null); // doesnt exist
+                pieces.Add(PlayerPieces[2]);
+                break;
+
+            case PieceOrderType.interaction:
+                switch (playerPieceIndex)
+                {
+                    case 0:
+                        pieces.Add(MiddlePieces[0]);
+                        pieces.Add(MiddlePieces[4]);
+                        pieces.Add(FinalPiece);
+                        pieces.Add(MiddlePieces[2]);
+                        pieces.Add(MiddlePieces[5]);
+                        pieces.Add(MiddlePieces[3]);
+                        pieces.Add(MiddlePieces[1]);
+
+                        break;
+
+                    case 1:
+
+                        pieces.Add(MiddlePieces[1]);
+                        pieces.Add(MiddlePieces[5]);
+                        pieces.Add(FinalPiece);
+                        pieces.Add(MiddlePieces[3]);
+                        pieces.Add(MiddlePieces[4]);
+                        pieces.Add(MiddlePieces[2]);
+                        pieces.Add(MiddlePieces[0]);
+                        break;
+
+                    case 2:
+
+                        pieces.Add(MiddlePieces[0]);
+                        pieces.Add(MiddlePieces[2]);
+                        pieces.Add(FinalPiece);
+                        pieces.Add(MiddlePieces[4]);
+                        pieces.Add(MiddlePieces[3]);
+                        pieces.Add(MiddlePieces[5]);
+                        pieces.Add(MiddlePieces[1]);
+
+                        break;
+
+                    case 3:
+
+                        pieces.Add(MiddlePieces[1]);
+                        pieces.Add(MiddlePieces[3]);
+                        pieces.Add(FinalPiece);
+                        pieces.Add(MiddlePieces[5]);
+                        pieces.Add(MiddlePieces[2]);
+                        pieces.Add(MiddlePieces[4]);
+                        pieces.Add(MiddlePieces[0]);
+
+                        break;
+                }
+
+                break;
+
+            default:
+                Debug.LogError("Invalid PieceOrderType");
+                break;
+        }
+
+        return pieces;
+    }
+
+    IEnumerator AnimateAllPieces(MeshRenderer interactionPiece)
+    {
+        if (!PlayerPieces.Contains(interactionPiece))
+        {
+            Debug.LogError("Invalid Player piece");
+            yield break;
+        }
+
+        int playerPieceIndex = 0;
+        foreach (MeshRenderer render in PlayerPieces)
+        {
+            if (interactionPiece == render)
+                break;
+
+            playerPieceIndex++;
+        }
+
+        List<MeshRenderer> allPieces = GetAllPieces(PieceOrderType.interaction, playerPieceIndex);
+
+        WaitForSeconds basicDelay = new WaitForSeconds(0.01f);
+
+        foreach (MeshRenderer render in allPieces)
+        {
+            ScalePiece(render, 30, 30, false);
+            yield return basicDelay;
+        }
+
+        foreach (MeshRenderer render in allPieces)
+        {
+            ScalePiece(render, PiecesScale[render], 30);
+            yield return basicDelay;
+        }
+
+        yield break;
+    }
+
+    enum DirectionOption
+    {
+        None,
+        Up,
+        Down,
+        Right,
+        Left,
+    }
+
+    Vector2 DirectionValue(DirectionOption directionOption)
+    {
+        switch (directionOption)
+        {
+            case DirectionOption.Up:
+                return Vector2.up;
+
+            case DirectionOption.Down:
+                return Vector2.down;
+
+            case DirectionOption.Right:
+                return Vector2.right;
+
+            case DirectionOption.Left:
+                return Vector2.left;
+
+            default:
+                return Vector2.zero;
+        }
+    }
+
+    MeshRenderer NeighborPiece(
+        int index,
+        DirectionOption directionOption,
+        MeshRenderer[] boardPieces
+    )
+    {
+        Vector2 direction = DirectionValue(directionOption);
+        (int row, int column) limits = (3, 4);
+        (int row, int column) multiIndex = IndexUtils.Converter.Uni2Multi(index, limits);
+
+        int neighborIndex = IndexUtils.Converter.Multi2Uni(
+            (multiIndex.row + (int)direction.y, multiIndex.column + (int)direction.x),
+            limits
+        );
+        if (Mathf.Abs((int)direction.y) > 0 && multiIndex.row + (int)direction.y == 1)
+        { // target row is middle one
+            neighborIndex -= 1;
+        }
+        else if (Mathf.Abs((int)direction.y) > 0 && multiIndex.row + (int)direction.y != 1)
+        {
+            neighborIndex += 1;
+        }
+
+        MeshRenderer neighborPiece = boardPieces[neighborIndex];
+
+        if (neighborPiece)
+            return neighborPiece;
+        else
+        {
+            Debug.Log("( NeighborPiece() ) | Out of board");
+            return null;
+        }
     }
 }

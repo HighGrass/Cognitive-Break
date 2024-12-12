@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class Narrator : MonoBehaviour
     float characterWrittingDelay = 0.05f;
     float spaceWrittingDelay = 0.1f;
     AudioSource audioSource;
+    private bool CanProceedSpeech { get; set; } = true;
 
     public enum FraseType
     {
@@ -18,7 +20,23 @@ public class Narrator : MonoBehaviour
         Wait,
     }
 
-    Dictionary<Coroutine, FraseType> Queue = new Dictionary<Coroutine, FraseType>();
+    List<QueueType> Queue = new List<QueueType>();
+    Coroutine QueueCoroutine;
+    Coroutine SkipQueueCoroutine;
+
+    class QueueType
+    {
+        public string Text { get; private set; }
+        public FraseType Type { get; }
+        public float Delay { get; }
+
+        public QueueType(string text, FraseType type = FraseType.None, float delay = 0f)
+        {
+            this.Text = text;
+            this.Type = type;
+            this.Delay = delay;
+        }
+    }
 
     private void Awake()
     {
@@ -36,26 +54,91 @@ public class Narrator : MonoBehaviour
 
     void StartQueue() => StartCoroutine(ManageQueue());
 
-    IEnumerator ManageQueue()
+    IEnumerator ManageQueue() // every frame
     {
-        if (Queue.Count <= 0) // every frame
+        float timeout = 0;
+        while (true)
+        {
+            if (timeout > 0)
+            {
+                if (CanProceedSpeech)
+                {
+                    timeout = 0; // skip timeout
+                    Debug.Log("NARRATOR - Speech interrupted");
+                    try
+                    {
+                        if (QueueCoroutine != null)
+                            StopCoroutine(QueueCoroutine);
+                        if (SkipQueueCoroutine != null)
+                            StopCoroutine(SkipQueueCoroutine);
+                    }
+                    catch (System.Exception)
+                    {
+                        throw;
+                    }
+                }
+
+                timeout = Mathf.Clamp(timeout - Time.deltaTime, 0, Mathf.Infinity);
+            }
+            else
+            {
+                if (Queue.Count > 0 && CanProceedSpeech)
+                {
+                    // Queue started
+                    StartSpeech(Queue[0]);
+
+                    float waitTime = Queue[0].Text.Length / 24 + 3f;
+
+                    timeout = SpeechTime(Queue[0].Text) + waitTime;
+
+                    if (Queue[0].Type == FraseType.None)
+                        SkipQueue(timeout);
+
+                    Queue.RemoveAt(0);
+                }
+            }
             yield return null;
+        }
     }
 
-    IEnumerator SkipQueue()
+    void StartSpeech(QueueType queueType)
     {
-        yield break;
+        StopQueue();
+        QueueCoroutine = StartCoroutine(WriteText(queueType.Text, queueType.Delay));
     }
 
-    IEnumerator StopQueue()
+    public void SkipQueue(float delay = 0)
     {
-        yield break;
+        if (delay <= 0)
+        {
+            SkipQueueCoroutine = null;
+            CanProceedSpeech = true;
+        }
+        else
+        {
+            IEnumerator proceedSpeech()
+            {
+                yield return new WaitForSeconds(delay);
+                CanProceedSpeech = true;
+                yield break;
+            }
+
+            SkipQueueCoroutine = StartCoroutine(proceedSpeech());
+        }
+        return;
+    }
+
+    void StopQueue()
+    {
+        CanProceedSpeech = false;
+        SkipQueueCoroutine = null;
+        return;
     }
 
     public void Say(string text, FraseType type, float delay = 0)
     {
-        Coroutine coroutine = StartCoroutine(WriteText(text, delay));
-        Queue.Add(coroutine, type);
+        QueueType speech = new QueueType(text, type, delay);
+        Queue.Add(speech);
     }
 
     public IEnumerator WriteText(string text, float waitTime = 0)
@@ -65,33 +148,20 @@ public class Narrator : MonoBehaviour
         ClearText();
         WaitForSeconds timer = new WaitForSeconds(characterWrittingDelay);
 
-        bool waitingForEndColoring = false;
-        string colorString = "";
-        bool finishingColoring = false;
+        string infoString = "";
 
         int index = -1;
         foreach (char ch in text)
         {
             index++;
 
-            if (finishingColoring && ch != '>')
-                continue;
-            else if (ch == '>' && finishingColoring) // finished coloring
+            if (infoString.Length > 0)
             {
-                finishingColoring = false;
-                CurrentText += "</color>";
-                colorString = "";
-                continue;
-            }
-
-            if (colorString.Length > 0)
-            {
-                colorString += ch;
+                infoString += ch;
                 if (ch == '>')
                 {
-                    CurrentText += colorString;
-                    colorString = "";
-                    waitingForEndColoring = true;
+                    CurrentText += infoString;
+                    infoString = "";
                 }
 
                 continue;
@@ -99,16 +169,7 @@ public class Narrator : MonoBehaviour
 
             if (ch == '<')
             {
-                if (waitingForEndColoring)
-                {
-                    finishingColoring = true;
-                    continue;
-                }
-                else
-                {
-                    colorString += "<";
-                }
-
+                infoString += "<";
                 continue;
             }
 
@@ -122,9 +183,6 @@ public class Narrator : MonoBehaviour
             audioSource.Play();
         }
 
-        yield return new WaitForSeconds(text.Length * 5 / 24);
-        if (CurrentText == text)
-            ClearText();
         yield break;
     }
 

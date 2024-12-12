@@ -67,8 +67,9 @@
     <Compile Include="Assets\Script\MovementShaker.cs" />
     <Compile Include="Assets\Script\PlayerCamera.cs" />
     <Compile Include="Assets\Script\MouseSystem.cs" />
-    <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\ColorUtils.cs" />
     <Compile Include="Assets\Script\Puzzles\EmotionPuzzle\EmotionGameManager.cs" />
+    <Compile Include="Assets\Script\ColorUtils.cs" />
+    <Compile Include="Assets\Script\IndexUtils.cs" />
     <Compile Include="Assets\Script\SceneChanger.cs" />
     <Compile Include="Assets\Script\Interactor.cs" />
     <Compile Include="Assets\Script\Narrator.cs" />
