@@ -35,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
             BodyRotationY = transform.rotation.eulerAngles.y; // turn body to interaction object
         else if (Speed > 0.01f)
             BodyRotationY = Mathf.Atan2(rb.velocity.x, rb.velocity.z) * Mathf.Rad2Deg;
-
     }
 
     void FixedUpdate()

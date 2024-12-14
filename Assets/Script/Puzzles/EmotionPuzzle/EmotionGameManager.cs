@@ -16,6 +16,8 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     Dictionary<MeshRenderer, Coroutine> movingPieces = new Dictionary<MeshRenderer, Coroutine>();
     int CurrentColor { get; } = 0;
 
+    public bool IsRunning() => Running;
+
     [SerializeField]
     Image colorPicker;
 
@@ -186,22 +188,26 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
                     {
                         if (playerPieceHistory != null)
                         {
-                            ScalePiece(playerPieceHistory.GetComponent<MeshRenderer>(), 150, 10);
+                            MeshRenderer render = playerPieceHistory.GetComponent<MeshRenderer>();
+                            ScalePiece(render, PiecesScale[render], 10, false);
                         }
-                        ScalePiece(renderHit.gameObject.GetComponent<MeshRenderer>(), 120, 10);
+                        MeshRenderer render2 = renderHit.gameObject.GetComponent<MeshRenderer>();
+                        ScalePiece(render2, PiecesScale[render2] - 30, 10, false);
                         playerPieceHistory = renderHit.gameObject;
                     } // is new
                 }
             }
             else if (playerPieceHistory != null)
             {
-                ScalePiece(playerPieceHistory.GetComponent<MeshRenderer>(), 150, 10);
+                MeshRenderer render = playerPieceHistory.GetComponent<MeshRenderer>();
+                ScalePiece(render, PiecesScale[render], 10);
                 playerPieceHistory = null;
             }
         }
         else if (playerPieceHistory != null)
         {
-            ScalePiece(playerPieceHistory.GetComponent<MeshRenderer>(), 150, 10);
+            MeshRenderer render = playerPieceHistory.GetComponent<MeshRenderer>();
+            ScalePiece(render, PiecesScale[render], 10);
             playerPieceHistory = null;
         }
 
@@ -882,17 +888,17 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
         List<MeshRenderer> allPieces = GetAllPieces(PieceOrderType.interaction, playerPieceIndex);
 
-        WaitForSeconds basicDelay = new WaitForSeconds(0.01f);
+        WaitForSeconds basicDelay = new WaitForSeconds(0.03f);
 
         foreach (MeshRenderer render in allPieces)
         {
-            ScalePiece(render, 30, 30, false);
+            ScalePiece(render, 30, 20, false);
             yield return basicDelay;
         }
 
         foreach (MeshRenderer render in allPieces)
         {
-            ScalePiece(render, PiecesScale[render], 30);
+            ScalePiece(render, PiecesScale[render], 20, false);
             yield return basicDelay;
         }
 

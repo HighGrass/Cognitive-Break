@@ -22,12 +22,13 @@ public class CameraFix : MonoBehaviour
     }
 
     public CameraState State { get; private set; } = CameraState.Unlocked;
-    CameraState stateHistory;
     MouseSystem mouseSystem;
     PlayerCamera playerCamera;
     PlayerMovement playerMovement;
     PlayerInteraction playerInteraction;
     IPuzzle thisPuzzle;
+
+    bool stateHistoryUpdated = false;
 
     public void Start()
     {
@@ -40,46 +41,58 @@ public class CameraFix : MonoBehaviour
         {
             thisPuzzle = GetComponent<EmotionGameManager>();
         }
+        else if (GetComponent<NeuronPuzzle>())
+        {
+            thisPuzzle = GetComponent<NeuronPuzzle>();
+        }
     }
 
     public void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
+            Debug.Log("State: " + State);
             if (State == CameraState.Locked || State == CameraState.Locking)
             {
-                State = CameraState.Unlocking;
+                SetState(CameraState.Unlocking);
             }
         }
 
         switch (State)
         {
             case CameraState.Locked:
-                if (stateHistory != CameraState.Locked) // first frame
-                { // start puzzle
-                    thisPuzzle.StartRunning();
-                    mouseSystem.ShowMouse();
-                }
+                if (stateHistoryUpdated)
+                    break;
+
+                // start puzzle
+                thisPuzzle.StartRunning();
+                mouseSystem.ShowMouse();
+                stateHistoryUpdated = true;
+
                 break;
 
             case CameraState.Unlocked:
-                if (mouseSystem.MouseVisible)
-                    mouseSystem.HideMouse();
+                if (stateHistoryUpdated)
+                    break;
+
+                mouseSystem.HideMouse();
                 mouseSystem.UnlockMouse();
 
                 playerCamera.UnlockCamera();
                 playerMovement.UnlockMovement();
                 playerInteraction.StartRunning();
+                stateHistoryUpdated = true;
 
                 break;
 
             case CameraState.Locking:
-                if (stateHistory != CameraState.Locking) // first frame
+                if (!stateHistoryUpdated) // first frame
                 {
                     mouseSystem.HideAll();
                     playerCamera.LockCamera();
                     playerMovement.LockMovement();
                     playerInteraction.StopRunning();
+                    stateHistoryUpdated = true;
                 }
 
                 Camera.main.transform.position = Vector3.Slerp(
@@ -95,17 +108,23 @@ public class CameraFix : MonoBehaviour
                 );
 
                 if (Vector3.Distance(Camera.main.transform.position, targetWorldPosition) < 0.1f)
-                    State = CameraState.Locked;
-                Debug.Log("CameraLocked");
+                {
+                    SetState(CameraState.Locked);
+                    Debug.LogWarning("Locked");
+                }
 
                 break;
 
             case CameraState.Unlocking:
-                playerCamera.LockCamera();
-                playerMovement.LockMovement();
-                mouseSystem.HideAll();
+                if (!stateHistoryUpdated)
+                {
+                    playerCamera.LockCamera();
+                    playerMovement.LockMovement();
+                    mouseSystem.HideAll();
 
-                thisPuzzle.OnExitPuzzle();
+                    thisPuzzle.OnExitPuzzle();
+                    stateHistoryUpdated = true;
+                }
 
                 Camera.main.transform.position = Vector3.Slerp(
                     Camera.main.transform.position,
@@ -120,14 +139,16 @@ public class CameraFix : MonoBehaviour
                 );
 
                 if (Vector3.Distance(Camera.main.transform.position, bodyWorldPosition) < 0.01f)
-                    State = CameraState.Unlocked;
+                {
+                    SetState(CameraState.Unlocked);
+                    Debug.LogWarning("Unlocked");
+                }
 
                 break;
 
             default:
                 break;
         }
-        stateHistory = State;
     }
 
     public void LockCamera()
@@ -145,7 +166,7 @@ public class CameraFix : MonoBehaviour
         playerMovement.LockMovement();
         mouseSystem.HideAll();
 
-        State = CameraState.Locking;
+        SetState(CameraState.Locking);
     }
 
     public void UnlockCamera()
@@ -161,6 +182,12 @@ public class CameraFix : MonoBehaviour
         playerCamera.LockCamera();
         playerMovement.LockMovement();
 
-        State = CameraState.Unlocking;
+        SetState(CameraState.Unlocking);
+    }
+
+    void SetState(CameraState state)
+    {
+        State = state;
+        stateHistoryUpdated = false;
     }
 }

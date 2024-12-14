@@ -113,9 +113,9 @@ public class PlayerCamera : MonoBehaviour
         cameraMovementShakeHistory = movementShaker.CameraShakeAngle;
         transform.rotation = Quaternion.Euler(vector);
 
-        Debug.Log("BodyRotationY: " + playerMovement.BodyRotationY);
-        Debug.Log("RealRotationY: " + transform.rotation.eulerAngles.y);
-        Debug.Log("AngleDifference: " + initialAngle + " | " + angleDifference);
+        //Debug.Log("BodyRotationY: " + playerMovement.BodyRotationY);
+        //Debug.Log("RealRotationY: " + transform.rotation.eulerAngles.y);
+        //Debug.Log("AngleDifference: " + initialAngle + " | " + angleDifference);
     }
 
     private float Deg2DualDeg(float degAngle) => 180 - LimitAngle360(degAngle); //  90 => 90 | 270 => -90
