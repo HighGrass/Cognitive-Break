@@ -1,266 +1,77 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Axon : MonoBehaviour
+public abstract class Axon : MonoBehaviour
 {
-    public Axon ConnectedAxon { get; private set; }
-    public Neuron thisNeuron => GetComponentInParent<Neuron>();
-    public SphereCollider collider;
-
-    Info info;
-    public float Size { get; private set; }
+    public bool Active { get; private set; } = false;
     public bool Connected => ConnectedAxon != null;
+    public float Energy { get; private set; }
+    public Neuron ThisNeuron { get; private set; }
+    public Axon ConnectedAxon { get; private set; }
+    public Coroutine AnimationCoroutine { get; private set; }
 
-    [SerializeField]
-    public bool isSmallNeuron = false;
-    public bool isAttachedAxon = false;
-    public Axon MainNeuron { get; private set; } = null;
-    public float Energy =>
-        Mathf.Clamp(
-            (thisNeuron.Energy * 5f / info.NEURON_INITIAL_ENERGY) + 1,
-            1,
-            info.AXON_MAX_ENERGY
-        );
+    public AxonController Controller { get; private set; }
+    private NeuronPuzzle neuronPuzzle;
 
-    float AnimationOffset = 0;
-
-    LineRenderer lineRenderer;
-
-    private void Awake()
+    public void Start()
     {
-        info = FindObjectOfType<Info>();
-        lineRenderer = GetComponent<LineRenderer>();
-        AnimationOffset = Random.Range(5, 20);
+        Controller = FindObjectOfType<AxonController>();
+        neuronPuzzle = FindObjectOfType<NeuronPuzzle>();
+        ThisNeuron = transform.parent.GetComponentInParent<Neuron>();
 
-        collider = GetComponent<SphereCollider>();
+        if (!ThisNeuron)
+        {
+            Debug.LogWarning("Neuron script not found in " + transform.parent.name);
+            return;
+        }
 
-        Size = lineRenderer.GetPosition(lineRenderer.positionCount - 1).y;
-
-        if (
-            isSmallNeuron && transform.parent && transform.parent.GetComponent<Axon>()
-            || isAttachedAxon && transform.parent && transform.parent.GetComponent<Axon>()
-        )
-            MainNeuron = transform.parent.GetComponent<Axon>();
+        if (Active)
+            Activate();
     }
 
-    void Update()
+    public void Activate()
     {
-        ControlAxon();
+        if (Active)
+        {
+            Debug.LogWarning("Axon is already active");
+            return;
+        }
+        Active = true;
+        AnimationCoroutine = StartCoroutine(Animation());
     }
+
+    public void Deactivate()
+    {
+        Active = false;
+
+        try
+        {
+            if (AnimationCoroutine != null)
+                StopCoroutine(AnimationCoroutine);
+        }
+        catch (System.Exception) { }
+
+        AnimationCoroutine = null;
+    }
+
+    public abstract IEnumerator Animation();
 
     public void Connect(Axon axon) => ConnectedAxon = axon;
 
     public void Disconnect() => ConnectedAxon = null;
 
-    void ControlAxon()
-    {
-        if (!isSmallNeuron)
-        {
-            if (!isAttachedAxon)
-            {
-                if (Size > 25)
-                {
-                    if (Connected)
-                    {
-                        Vector3 initialLocalPosition = Vector3.zero;
-                        Vector3 finalLocalPosition = new Vector3(0, Size, 0);
-
-                        float midPoint = (float)lineRenderer.positionCount / 2;
-                        for (int i = 0; i < lineRenderer.positionCount; i++)
-                        {
-                            float normalizedValue = (float)i / (lineRenderer.positionCount - 1);
-                            float multiplier = Mathf.Clamp01(
-                                Mathf.Abs(midPoint - Mathf.Abs(i - midPoint)) / midPoint
-                            );
-
-                            float widthMagnitude =
-                                Mathf.Sin(
-                                    normalizedValue * 180 * Mathf.Deg2Rad
-                                        + (Time.time * Energy + normalizedValue / 3)
-                                )
-                                * multiplier
-                                * 4f; // Use PI para o arco completo
-
-                            Vector3 arcOffset = new Vector3(widthMagnitude, 0, 0);
-
-                            Vector3 interpolatedPosition = Vector3.Lerp(
-                                initialLocalPosition,
-                                finalLocalPosition,
-                                (float)i / (lineRenderer.positionCount - 1)
-                            );
-
-                            lineRenderer.SetPosition(i, interpolatedPosition + arcOffset);
-                        }
-
-                        lineRenderer.SetPosition(0, initialLocalPosition);
-                        lineRenderer.SetPosition(
-                            lineRenderer.positionCount - 1,
-                            finalLocalPosition
-                        );
-                    }
-                    else
-                    { //small inactive axon
-                        Vector3 initialLocalPosition = Vector3.zero;
-                        Vector3 finalLocalPosition = new Vector3(0, Size, 0);
-
-                        float midPoint = (float)lineRenderer.positionCount / 2;
-                        for (int i = 0; i < lineRenderer.positionCount; i++)
-                        {
-                            float normalizedValue = (float)i / (lineRenderer.positionCount - 1);
-
-                            float widthMagnitude =
-                                Mathf.Sin(
-                                    normalizedValue * 180 * Mathf.Deg2Rad
-                                        + (Time.time * Energy - normalizedValue * i / 3)
-                                        + AnimationOffset
-                                )
-                                * normalizedValue
-                                * i
-                                / 2; // Use PI para o arco completo
-
-                            Vector3 arcOffset = new Vector3(widthMagnitude, 0, 0);
-
-                            Vector3 interpolatedPosition = Vector3.Lerp(
-                                initialLocalPosition,
-                                finalLocalPosition,
-                                (float)i / (lineRenderer.positionCount - 1)
-                            );
-
-                            lineRenderer.SetPosition(i, interpolatedPosition + arcOffset);
-                        }
-
-                        lineRenderer.SetPosition(0, initialLocalPosition);
-                    }
-                }
-                else
-                {
-                    Vector3 initialLocalPosition = Vector3.zero;
-                    Vector3 finalLocalPosition = new Vector3(0, Size, 0);
-
-                    float midPoint = (float)lineRenderer.positionCount / 2;
-                    for (int i = 0; i < lineRenderer.positionCount; i++)
-                    {
-                        float normalizedValue = (float)i / (lineRenderer.positionCount - 1);
-
-                        float widthMagnitude =
-                            Mathf.Sin(
-                                normalizedValue * 180 * Mathf.Deg2Rad
-                                    + (Time.time * Energy - normalizedValue * i / 3)
-                                    + AnimationOffset
-                            )
-                            * normalizedValue
-                            * i
-                            / 2; // Use PI para o arco completo
-
-                        Vector3 arcOffset = new Vector3(widthMagnitude, 0, 0);
-
-                        Vector3 interpolatedPosition = Vector3.Lerp(
-                            initialLocalPosition,
-                            finalLocalPosition,
-                            (float)i / (lineRenderer.positionCount - 1)
-                        );
-
-                        lineRenderer.SetPosition(i, interpolatedPosition + arcOffset);
-                    }
-
-                    lineRenderer.SetPosition(0, initialLocalPosition);
-                }
-            }
-            else
-            { // Small neuron not final attached (visual)
-                Vector3 initialLocalPosition = new Vector3(
-                    0,
-                    -MainNeuron.GetComponent<LineRenderer>().GetPosition(10).x,
-                    0
-                );
-                Vector3 finalLocalPosition = new Vector3(
-                    0,
-                    -MainNeuron.GetComponent<LineRenderer>().GetPosition(10).x + Size,
-                    0
-                );
-
-                float midPoint = (float)lineRenderer.positionCount / 2;
-                for (int i = 0; i < lineRenderer.positionCount; i++)
-                {
-                    float normalizedValue = (float)i / (lineRenderer.positionCount - 1);
-
-                    float widthMagnitude =
-                        Mathf.Sin(
-                            normalizedValue * 180 * Mathf.Deg2Rad
-                                + (Time.time * Energy - normalizedValue * i / 3)
-                                + AnimationOffset
-                        )
-                        * normalizedValue
-                        * i
-                        / 2; // Use PI para o arco completo
-
-                    Vector3 arcOffset = new Vector3(widthMagnitude, 0, 0);
-
-                    Vector3 interpolatedPosition = Vector3.Lerp(
-                        initialLocalPosition,
-                        finalLocalPosition,
-                        (float)i / (lineRenderer.positionCount - 1)
-                    );
-
-                    lineRenderer.SetPosition(i, interpolatedPosition + arcOffset);
-                }
-
-                lineRenderer.SetPosition(0, initialLocalPosition);
-            }
-        }
-        else // Small neuron (visual)
-        {
-            Vector3 initialLocalPosition = MainNeuron.lineRenderer.GetPosition(5);
-            Vector3 finalLocalPosition = MainNeuron.lineRenderer.GetPosition(15);
-
-            float typeMultiplier = 4;
-            if (MainNeuron.Connected)
-                typeMultiplier = 6;
-
-            float midPoint = (float)lineRenderer.positionCount / 2;
-            for (int i = 0; i < lineRenderer.positionCount; i++)
-            {
-                float normalizedValue = (float)i / (lineRenderer.positionCount - 1);
-                float multiplier = Mathf.Clamp01(
-                    Mathf.Abs(midPoint - Mathf.Abs(i - midPoint)) / midPoint
-                );
-
-                float widthMagnitude =
-                    Mathf.Sin(
-                        normalizedValue * 180 * Mathf.Deg2Rad
-                            + (Time.time * Energy + normalizedValue / 3)
-                    )
-                    * multiplier
-                    * typeMultiplier; // Use PI para o arco completo
-
-                Vector3 arcOffset = new Vector3(widthMagnitude, 0, 0);
-
-                Vector3 interpolatedPosition = Vector3.Lerp(
-                    initialLocalPosition,
-                    finalLocalPosition,
-                    (float)i / (lineRenderer.positionCount - 1)
-                );
-
-                lineRenderer.SetPosition(i, interpolatedPosition + arcOffset);
-            }
-
-            lineRenderer.SetPosition(0, initialLocalPosition);
-            lineRenderer.SetPosition(lineRenderer.positionCount - 1, finalLocalPosition);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Axon>())
         {
             Connect(other.gameObject.GetComponent<Axon>());
-            if (thisNeuron.Movable)
-                thisNeuron.ConnectToNeuron(other.gameObject.GetComponent<Axon>().thisNeuron);
+            if (ThisNeuron.Movable)
+                ThisNeuron.ConnectToNeuron(other.gameObject.GetComponent<Axon>().ThisNeuron);
+            neuronPuzzle.UpdateNeuronCache(ThisNeuron);
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnTriggerExit(Collider other)
     {
         Axon otherAxon = other.gameObject.GetComponent<Axon>();
 
@@ -268,7 +79,9 @@ public class Axon : MonoBehaviour
             return;
 
         Disconnect();
-        if (thisNeuron.Movable)
-            thisNeuron.DisconnectFromNeuron(otherAxon.thisNeuron);
+        if (ThisNeuron.Movable)
+            ThisNeuron.DisconnectFromNeuron(otherAxon.ThisNeuron);
+
+        neuronPuzzle.UpdateNeuronCache(ThisNeuron);
     }
 }

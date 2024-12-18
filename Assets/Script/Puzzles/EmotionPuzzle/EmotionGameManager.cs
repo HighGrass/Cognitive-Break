@@ -88,9 +88,9 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
     void Start()
     {
-        narrator = FindAnyObjectByType<Narrator>();
-        playerInteraction = FindAnyObjectByType<PlayerInteraction>();
-        mouseSystem = FindAnyObjectByType<MouseSystem>();
+        narrator = FindObjectOfType<Narrator>();
+        playerInteraction = FindObjectOfType<PlayerInteraction>();
+        mouseSystem = FindObjectOfType<MouseSystem>();
 
         for (int i = 0; i < LevelColors.Length; i++)
         {
@@ -117,7 +117,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
         if (Running && !PuzzleStarted) // Start puzzle
         {
-            StartCoroutine(StartLevel());
+            StartCoroutine(StartRunningCoroutine());
             PuzzleStarted = true;
         }
         else if (!Running)
@@ -598,13 +598,13 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
             {
                 IndicatorPiece.material.SetColor("_Color", Color.white);
                 StartCoroutine(RestartMapBoard(1, false));
-                StartCoroutine(FinishLevel());
+                StartCoroutine(StopRunningCoroutine());
             }
         }
         return;
     }
 
-    IEnumerator StartLevel()
+    IEnumerator StartRunningCoroutine()
     {
         LevelCompleted = false;
         Debug.Log("Emotion puzzle started");
@@ -615,14 +615,12 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         yield break;
     }
 
-    IEnumerator FinishLevel()
+    IEnumerator StopRunningCoroutine(float time = 0)
     {
         LevelCompleted = true;
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(time);
         //Application.Quit();
-
-        StopRunning();
     }
 
     Color GetMaterialColor(GameObject obj)
@@ -968,4 +966,6 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
             return null;
         }
     }
+
+    public void OnFinishPuzzle() { }
 }

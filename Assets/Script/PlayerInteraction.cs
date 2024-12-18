@@ -31,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void Awake()
     {
-        mouseSystem = FindAnyObjectByType<MouseSystem>();
+        mouseSystem = FindObjectOfType<MouseSystem>();
     }
 
     private void Update()

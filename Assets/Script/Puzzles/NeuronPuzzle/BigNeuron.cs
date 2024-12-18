@@ -5,14 +5,14 @@ using UnityEngine;
 public class BigNeuron : MonoBehaviour
 {
     NeuronPuzzle gameManager;
-    Neuron thisNeuron;
+    Neuron ThisNeuron;
     Info info;
     bool gameFinished = false;
 
     private void Awake()
     {
         info = FindObjectOfType<Info>();
-        thisNeuron = GetComponent<Neuron>();
+        ThisNeuron = GetComponent<Neuron>();
         gameManager = FindObjectOfType<NeuronPuzzle>();
     }
 
@@ -23,24 +23,34 @@ public class BigNeuron : MonoBehaviour
 
     private void Update()
     {
-        if (!thisNeuron)
+        if (!ThisNeuron)
         {
             Debug.LogError("Invalid Big Neuron");
             return;
         }
-        if (thisNeuron.Active && thisNeuron.Energy < info.NEURON_INITIAL_ENERGY * 50)
+        if (ThisNeuron.Active && ThisNeuron.Energy < info.NEURON_INITIAL_ENERGY)
         {
             if (!gameFinished)
             {
-                StartCoroutine(FinishLevelWithDelay(7f));
+                StartCoroutine(StopRunningWithDelay(7f));
             }
             gameFinished = true;
-            thisNeuron.Energy += Time.deltaTime * 5;
-            thisNeuron.Activate();
+            ThisNeuron.Energy += Time.deltaTime * 5;
         }
     }
 
-    IEnumerator FinishLevelWithDelay(float time)
+    void DisplayFinalAnimation() => StartCoroutine(FinalAnimation());
+
+    IEnumerator FinalAnimation()
+    {
+        while (ThisNeuron.Active && ThisNeuron.Energy < info.NEURON_INITIAL_ENERGY)
+        {
+            yield return null;
+        }
+        yield break;
+    }
+
+    IEnumerator StopRunningWithDelay(float time)
     {
         yield return new WaitForSeconds(0.1f);
 
@@ -51,7 +61,7 @@ public class BigNeuron : MonoBehaviour
         }
         yield return new WaitForSeconds(time);
 
-        gameManager.FinishLevel();
+        gameManager.StopRunning();
 
         yield return new WaitForSeconds(4);
         Application.Quit();

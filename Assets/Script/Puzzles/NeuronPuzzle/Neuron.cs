@@ -23,9 +23,14 @@ public class Neuron : MonoBehaviour
     private float rotationLeft = 0;
     LineRenderer[] lineRenderers;
     Color neuronColor;
+    Coroutine RotationCoroutine = null;
+    NeuronPuzzle neuronPuzzle;
 
-    private void Awake()
+    bool IsRotating => RotationCoroutine != null;
+
+    private void Start()
     {
+        neuronPuzzle = FindObjectOfType<NeuronPuzzle>();
         Axons = GetComponentsInChildren<Axon>();
         info = FindObjectOfType<Info>();
         lineRenderers = GetComponentsInChildren<LineRenderer>();
@@ -49,25 +54,14 @@ public class Neuron : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Activate(Neuron energySourceNeuron)
     {
-        RotateIfNeeded();
-        //GetNextNeuron();
+        if (energySourceNeuron == null)
+            return;
 
-        if (Active)
-        {
-            if (!EnergySourceNeuron || EnergySourceNeuron.Energy <= 0)
-                Deactivate();
-            EnergySourceNeuron = FindPossibleEnergySource();
-        }
-        else
-        {
-            EnergySourceNeuron = FindPossibleEnergySource();
-        }
-    }
+        EnergySourceNeuron = energySourceNeuron;
+        Energy = Mathf.Clamp(energySourceNeuron.Energy - info.ENERGY_LOSS, 0, float.MaxValue);
 
-    public void Activate()
-    {
         Color sColor = Color.Lerp(
             neuronColor,
             Color.white,
@@ -78,7 +72,19 @@ public class Neuron : MonoBehaviour
             lineRenderer.startColor = sColor;
             lineRenderer.endColor = sColor;
         }
+
         Active = true;
+
+        foreach (Axon axon in Axons)
+        {
+            if (axon.ThisNeuron.EnergySourceNeuron == this || axon.ThisNeuron.Energy < Energy) // important
+                continue;
+
+            axon.ThisNeuron.DetectNeuronBehavior();
+        }
+
+        neuronPuzzle.UpdateNeuronCache(this);
+        return;
     }
 
     public void Deactivate()
@@ -91,41 +97,7 @@ public class Neuron : MonoBehaviour
             lineRenderer.endColor = neuronColor;
         }
         Active = false;
-    }
-
-    void RotateIfNeeded()
-    {
-        if (!Movable)
-            return;
-
-        if (Mathf.Abs(rotationLeft) < 0.001)
-        {
-            if (NeuronMoving)
-                NeuronMoving = false;
-            return;
-        }
-
-        float rotationChange =
-            RotationSpeed
-                * Time.deltaTime
-                * (
-                    Mathf.Abs(Mathf.Sin(180 - Mathf.Clamp(Mathf.Abs(rotationLeft) * 2, 5, 180)))
-                    * 10
-                )
-            + 0.1f * Time.deltaTime;
-
-        if (rotationLeft - rotationChange < 0)
-            rotationChange = rotationLeft;
-        rotationLeft -= rotationChange;
-        transform.rotation = Quaternion.Euler(
-            new Vector3(
-                transform.rotation.eulerAngles.x,
-                transform.rotation.eulerAngles.y,
-                transform.rotation.eulerAngles.z - rotationChange
-            )
-        );
-        //DeactivateNeuronConnections();
-        return;
+        neuronPuzzle.UpdateNeuronCache(this);
     }
 
     public void OnNeuronClick()
@@ -133,12 +105,12 @@ public class Neuron : MonoBehaviour
         if (!Movable)
             return;
 
-        Debug.Log("Neuron pressed");
         StartCoroutine(CheckNeuron(0.5f));
-        if (Mathf.Abs(rotationLeft) > 0)
+
+        if (IsRotating)
             return;
 
-        rotationLeft = 90;
+        RotateNeuron();
         NeuronMoving = true;
         return;
     }
@@ -174,20 +146,11 @@ public class Neuron : MonoBehaviour
             return;
         }
 
-        if (neuron.Energy - info.ENERGY_LOSS > 0 && neuron.Energy - info.ENERGY_LOSS > Energy)
+        Neuron eNeuron = FindPossibleEnergySource();
+        if (eNeuron != this && eNeuron != null)
         {
-            EnergySourceNeuron = neuron;
-
-            if (info != null)
-            {
-                Energy = EnergySourceNeuron.Energy - info.ENERGY_LOSS;
-            }
-            else
-            {
-                Debug.LogError("Info object is null");
-            }
-
-            Activate();
+            EnergySourceNeuron = eNeuron;
+            Activate(eNeuron);
         }
 
         return;
@@ -195,48 +158,31 @@ public class Neuron : MonoBehaviour
 
     public void DisconnectFromNeuron(Neuron neuron)
     {
-        Debug.LogWarning("Disconnected from neuron: " + neuron.name);
-
         EnergySourceNeuron = FindPossibleEnergySource();
-        if (!EnergySourceNeuron)
+        if (!EnergySourceNeuron || EnergySourceNeuron == this)
             Deactivate();
         else
-            Energy = EnergySourceNeuron.Energy - info.ENERGY_LOSS;
+            Activate(EnergySourceNeuron);
 
+        Debug.LogWarning("Disconnected from neuron: " + neuron.name);
         return;
     }
 
     Neuron[] GetConnectedNeurons()
     {
-        int connections = 0;
-
+        List<Neuron> cNeurons = new List<Neuron>();
         foreach (Axon axon in Axons)
         {
-            if (!axon.collider || !axon.gameObject.activeSelf)
+            if (!axon.GetComponent<Collider>() || !axon.gameObject.activeSelf)
                 continue;
             if (axon.Connected)
-                connections++;
+                cNeurons.Add(axon.ThisNeuron);
         }
 
-        Neuron[] ConnectedNeurons = new Neuron[connections];
-
-        int index = 0;
-
-        foreach (Axon axon in Axons)
-        {
-            if (!axon.collider || !axon.gameObject.activeSelf)
-                continue;
-            if (axon.Connected && index < connections)
-            {
-                ConnectedNeurons[index] = axon.ConnectedAxon.thisNeuron;
-                index++;
-            }
-        }
-
-        return ConnectedNeurons;
+        return cNeurons.ToArray();
     }
 
-    Neuron FindPossibleEnergySource()
+    public Neuron FindPossibleEnergySource()
     {
         float maxEnergy = 0;
         Neuron newEnergySource = null;
@@ -245,6 +191,7 @@ public class Neuron : MonoBehaviour
         {
             if (
                 n.EnergySourceNeuron != null
+                && n.EnergySourceNeuron != this
                 && n.EnergySourceNeuron.Active
                 && n.EnergySourceNeuron.Energy - info.ENERGY_LOSS > 0
             )
@@ -256,23 +203,76 @@ public class Neuron : MonoBehaviour
                 }
             }
         }
-        if (maxEnergy - info.ENERGY_LOSS <= 0 && EnergySourceNeuron != this)
-        {
-            return null;
-        }
 
-        if (EnergySourceNeuron != this)
+        if (newEnergySource != this)
         {
             EnergySourceNeuron = newEnergySource;
-            if (!GetComponent<BigNeuron>())
+            if (EnergySourceNeuron != null)
+            {
                 Energy = EnergySourceNeuron.Energy - info.ENERGY_LOSS;
+            }
+        }
+        return newEnergySource;
+    }
+
+    void RotateNeuron(float speed = 180f)
+    {
+        if (!IsRotating)
+            RotationCoroutine = StartCoroutine(RotateNeuronCoroutine(speed));
+    }
+
+    IEnumerator RotateNeuronCoroutine(float rotationSpeed)
+    {
+        if (transform == null)
+        {
+            Debug.LogError("RotateNeuronCoroutine: transform is null");
+            yield break;
+        }
+
+        Quaternion targetRotation =
+            transform.localRotation * Quaternion.Euler(new Vector3(0, 0, 90));
+
+        transform.localRotation *= Quaternion.Euler(0, 0, 2);
+
+        while (true)
+        {
+            float yRotation = transform.localRotation.eulerAngles.z;
+            if (Quaternion.Dot(transform.localRotation, targetRotation) > 0.999f)
+            {
+                transform.localRotation = targetRotation;
+                break;
+            }
+
+            transform.localRotation *= Quaternion.Euler(0, 0, Time.deltaTime * rotationSpeed);
+            /*
+                        transform.localRotation = Quaternion.RotateTowards(
+                            transform.localRotation,
+                            targetRotation,
+                            1
+                        );
+              */
+            Debug.Log("Rotating neuron");
+            yield return null;
+        }
+        if (RotationCoroutine != null)
+        {
+            RotationCoroutine = null;
+        }
+        RotationCoroutine = null;
+        DetectNeuronBehavior();
+        Debug.Log("Neuron finished rotation");
+    }
+
+    void DetectNeuronBehavior()
+    {
+        Neuron eNeuron = FindPossibleEnergySource();
+        if (!EnergySourceNeuron)
+        {
+            Deactivate();
         }
         else
         {
-            if (maxEnergy <= Energy)
-                newEnergySource = this;
+            Activate(eNeuron);
         }
-        Activate();
-        return newEnergySource;
     }
 }

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7049148025478558906}
   - component: {fileID: 8872065829072832566}
-  - component: {fileID: 8339362182570511668}
   - component: {fileID: 4191660190299581286}
+  - component: {fileID: 6762236347679292850}
   m_Layer: 0
   m_Name: Connection 3
   m_TagString: Untagged
@@ -175,21 +175,6 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &8339362182570511668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290771419863663545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collider: {fileID: 4191660190299581286}
-  isSmallNeuron: 0
-  isAttachedAxon: 0
 --- !u!135 &4191660190299581286
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -211,6 +196,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5
   m_Center: {x: 0, y: 30, z: 0}
+--- !u!114 &6762236347679292850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290771419863663545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e902dd05f9a6a3f4fa104439196d5f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &881643434835588792
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2346456695162658451}
   - component: {fileID: 2567732096679873873}
-  - component: {fileID: 7927727434413857804}
+  - component: {fileID: 4599532594997606341}
   m_Layer: 0
   m_Name: Connection MIN (1)
   m_TagString: Untagged
@@ -506,7 +503,7 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &7927727434413857804
+--- !u!114 &4599532594997606341
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -515,12 +512,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 955146486470588382}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
+  m_Script: {fileID: 11500000, guid: 88d3ca2da3a5c434a875e4c61448ba86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
-  isSmallNeuron: 1
-  isAttachedAxon: 0
 --- !u!1 &1508796292171997054
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,7 +604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6649895406249080348}
   - component: {fileID: 730466793537380430}
-  - component: {fileID: 2322360396218459892}
+  - component: {fileID: 5444306836383372567}
   m_Layer: 0
   m_Name: Connection MIN (5)
   m_TagString: Untagged
@@ -763,7 +757,7 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &2322360396218459892
+--- !u!114 &5444306836383372567
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -772,12 +766,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2051250916412280250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d30c7011186c054e85d34099a17d6f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
-  isSmallNeuron: 0
-  isAttachedAxon: 1
 --- !u!1 &2282220917047120489
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,8 +890,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3870572190161283788}
   - component: {fileID: 412159847695334420}
-  - component: {fileID: 3405959166055842552}
   - component: {fileID: 210094407581542106}
+  - component: {fileID: 106207431740264867}
   m_Layer: 0
   m_Name: Connection 2
   m_TagString: Untagged
@@ -1064,21 +1055,6 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &3405959166055842552
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3416468315419334358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collider: {fileID: 210094407581542106}
-  isSmallNeuron: 0
-  isAttachedAxon: 0
 --- !u!135 &210094407581542106
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1100,6 +1076,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5
   m_Center: {x: 0, y: 30, z: 0}
+--- !u!114 &106207431740264867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3416468315419334358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e902dd05f9a6a3f4fa104439196d5f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4795400746176402518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,7 +1098,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1096062712045657788}
   - component: {fileID: 2080529369363132377}
-  - component: {fileID: 1568601193096190915}
+  - component: {fileID: 4517097283385315991}
   m_Layer: 0
   m_Name: Connection MIN (4)
   m_TagString: Untagged
@@ -1263,7 +1251,7 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &1568601193096190915
+--- !u!114 &4517097283385315991
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1272,12 +1260,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4795400746176402518}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d30c7011186c054e85d34099a17d6f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
-  isSmallNeuron: 0
-  isAttachedAxon: 1
 --- !u!1 &4892404409475985697
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,7 +1273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3231787558126706100}
   - component: {fileID: 2799156450206983158}
-  - component: {fileID: 2125801416287315417}
+  - component: {fileID: 5722165125822412946}
   m_Layer: 0
   m_Name: Connection MIN (3)
   m_TagString: Untagged
@@ -1441,7 +1426,7 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &2125801416287315417
+--- !u!114 &5722165125822412946
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1450,12 +1435,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4892404409475985697}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
+  m_Script: {fileID: 11500000, guid: e902dd05f9a6a3f4fa104439196d5f98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
-  isSmallNeuron: 0
-  isAttachedAxon: 0
 --- !u!1 &5904132641190217968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,8 +1448,8 @@ GameObject:
   m_Component:
   - component: {fileID: 270402522924637913}
   - component: {fileID: 62438117983081616}
-  - component: {fileID: 6625879043699376165}
   - component: {fileID: 4933229947311956829}
+  - component: {fileID: 1513988945598783590}
   m_Layer: 0
   m_Name: Connection 4
   m_TagString: Untagged
@@ -1631,21 +1613,6 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &6625879043699376165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5904132641190217968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collider: {fileID: 4933229947311956829}
-  isSmallNeuron: 0
-  isAttachedAxon: 0
 --- !u!135 &4933229947311956829
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1667,6 +1634,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5
   m_Center: {x: 0, y: 30, z: 0}
+--- !u!114 &1513988945598783590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5904132641190217968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e902dd05f9a6a3f4fa104439196d5f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7193674390022606716
 GameObject:
   m_ObjectHideFlags: 0
@@ -1677,7 +1656,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2906073150003240852}
   - component: {fileID: 5631170163812085114}
-  - component: {fileID: 5188870538205312552}
+  - component: {fileID: 4262222036658386730}
   m_Layer: 0
   m_Name: Connection MIN (2)
   m_TagString: Untagged
@@ -1830,7 +1809,7 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &5188870538205312552
+--- !u!114 &4262222036658386730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1839,12 +1818,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7193674390022606716}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
+  m_Script: {fileID: 11500000, guid: 88d3ca2da3a5c434a875e4c61448ba86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
-  isSmallNeuron: 1
-  isAttachedAxon: 0
 --- !u!1 &8253330228994822109
 GameObject:
   m_ObjectHideFlags: 0
@@ -1891,8 +1867,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6105915091221269827}
   - component: {fileID: 637484654743705695}
-  - component: {fileID: 345865755660021862}
   - component: {fileID: 5051150731019048099}
+  - component: {fileID: 3552130324685825847}
   m_Layer: 0
   m_Name: Connection 1
   m_TagString: Untagged
@@ -2056,21 +2032,6 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &345865755660021862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9046915135433476777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e00a5dd29007234abb5193c2e944327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collider: {fileID: 5051150731019048099}
-  isSmallNeuron: 0
-  isAttachedAxon: 0
 --- !u!135 &5051150731019048099
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2092,3 +2053,15 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5
   m_Center: {x: 0, y: 30, z: 0}
+--- !u!114 &3552130324685825847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9046915135433476777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e902dd05f9a6a3f4fa104439196d5f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

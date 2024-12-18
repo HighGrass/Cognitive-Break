@@ -14,4 +14,10 @@ public class Info : MonoBehaviour
     public float MAX_SMALL_AXON_ENERGY { get; private set; } = 5;
     public float MIN_CONNECTED_AXON_ENERGY { get; private set; } = 3f;
     public float MAX_CONNECTED_AXON_ENERGY { get; private set; } = 4f;
+
+    public enum AxonType
+    {
+        NORMAL,
+        SMALL,
+    };
 }

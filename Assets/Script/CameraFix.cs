@@ -32,10 +32,10 @@ public class CameraFix : MonoBehaviour
 
     public void Start()
     {
-        playerInteraction = FindAnyObjectByType<PlayerInteraction>();
-        mouseSystem = FindAnyObjectByType<MouseSystem>();
-        playerCamera = FindAnyObjectByType<PlayerCamera>();
-        playerMovement = FindAnyObjectByType<PlayerMovement>();
+        playerInteraction = FindObjectOfType<PlayerInteraction>();
+        mouseSystem = FindObjectOfType<MouseSystem>();
+        playerCamera = FindObjectOfType<PlayerCamera>();
+        playerMovement = FindObjectOfType<PlayerMovement>();
 
         if (GetComponent<EmotionGameManager>())
         {

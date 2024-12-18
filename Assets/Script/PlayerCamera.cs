@@ -30,8 +30,8 @@ public class PlayerCamera : MonoBehaviour
     private void OnEnable()
     {
         HeadRealRotation = transform.parent.transform.rotation;
-        playerMovement = FindAnyObjectByType<PlayerMovement>();
-        movementShaker = FindAnyObjectByType<MovementShaker>();
+        playerMovement = FindObjectOfType<PlayerMovement>();
+        movementShaker = FindObjectOfType<MovementShaker>();
         detector = GetComponent<SphereCollider>();
     }
 

@@ -47,7 +47,8 @@ public class MovementShaker : MonoBehaviour
         rb = GetComponentInParent<Rigidbody>();
     }
 
-    void Update(){
+    void Update()
+    {
         ShakeIntensity = new Vector2(SidesShakeMultiplier, UpDownShakeMultiplier);
     }
 

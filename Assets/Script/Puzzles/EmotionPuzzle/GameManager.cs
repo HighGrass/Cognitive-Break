@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         IndicatorCoverPiece = IndicatorPiece.transform.parent.GetComponentInChildren<Image>();
         overlayColor = Overlay.color;
 
-        StartCoroutine(StartLevel(2, 100));
+        StartCoroutine(StartRunning(2, 100));
         //HoldingPiece.enabled = false;
     }
 
@@ -467,13 +467,13 @@ public class GameManager : MonoBehaviour
             {
                 IndicatorPiece.color = Color.white;
                 StartCoroutine(RestartMapBoard(1, false));
-                StartCoroutine(FinishLevel(2, 100));
+                StartCoroutine(StopRunning(2, 100));
             }
         }
         return;
     }
 
-    IEnumerator StartLevel(float time, int divisions)
+    IEnumerator StartRunning(float time, int divisions)
     {
         Overlay.enabled = true;
         Overlay.color = overlayColor;
@@ -494,7 +494,7 @@ public class GameManager : MonoBehaviour
         LevelCompleted = false;
     }
 
-    IEnumerator FinishLevel(float time, int divisions)
+    IEnumerator StopRunning(float time, int divisions)
     {
         yield return new WaitForSeconds(2);
         LevelCompleted = true;
@@ -517,7 +517,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         //Application.Quit();
 
-        SceneChanger sceneManager = FindAnyObjectByType<SceneChanger>();
+        SceneChanger sceneManager = FindObjectOfType<SceneChanger>();
         sceneManager.LoadSceneByName("MainScene");
     }
 }
