@@ -12,7 +12,13 @@ namespace BrainLibrary
         NORMAL,
         VISUAL_ATTACHED,
         VISUAl_UNATTACHED,
-        MOTHER,
+    }
+
+    public enum NeuronType
+    {
+        NORMAL,
+        INITIAL,
+        FINAL,
     }
 }
 
@@ -20,8 +26,8 @@ public class AxonController : MonoBehaviour
 {
     List<Axon> allAxons;
 
-    public SineWaveActiveAnimator WaveActiveAnimator { get; private set; }
-    public SineWaveActiveAnimator WaveInactiveAnimator { get; private set; }
+    public SineWaveAnimator WaveActiveAnimator { get; private set; }
+    public SineWaveAnimator WaveInactiveAnimator { get; private set; }
 
     public List<Axon> GetAllAxons() => allAxons;
 
@@ -29,10 +35,10 @@ public class AxonController : MonoBehaviour
     {
         allAxons = FindObjectsOfType<Axon>().ToList();
 
-        WaveActiveAnimator = gameObject.AddComponent<SineWaveActiveAnimator>();
+        WaveActiveAnimator = gameObject.AddComponent<SineWaveAnimator>();
         WaveActiveAnimator.Init(BrainLibrary.AxonType.NORMAL, false, true); // create and stop
 
-        WaveInactiveAnimator = gameObject.AddComponent<SineWaveActiveAnimator>();
+        WaveInactiveAnimator = gameObject.AddComponent<SineWaveAnimator>();
         WaveInactiveAnimator.Init(BrainLibrary.AxonType.NORMAL, false, false); // create and stop
     }
 }

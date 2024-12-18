@@ -13,8 +13,9 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     public bool PuzzleStarted { get; private set; } = false;
     bool LevelCompleted = false;
     bool piecesActive;
+    bool hasExited = false;
     Dictionary<MeshRenderer, Coroutine> movingPieces = new Dictionary<MeshRenderer, Coroutine>();
-    int CurrentColor { get; } = 0;
+    int Level { get; set; } = 0;
 
     public bool IsRunning() => Running;
 
@@ -38,7 +39,6 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
     MeshRenderer IndicatorCoverPiece;
 
-    [SerializeField]
     float MIN_COLOR_DIFFERENCE = 0.001f;
 
     GameObject playerPieceHistory;
@@ -46,21 +46,23 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     static Color[] LevelColors = new Color[4]
     {
         new Color(0.350f, 0.805f, 0.805f, 1.000f), // cian - felicidade
-        new Color(0.793f, 0.374f, 0.793f, 1.000f), // purple - tristeza
-        new Color(0.870f, 0.432f, 0.167f, 1.000f), // orange - raiva
+        new Color(0.805f, 0.350f, 0.805f, 1.000f), // purple - tristeza
+        new Color(0.831f, 0.472f, 0.167f, 1.000f), // orange - raiva
         new Color(0.490f, 0.000f, 0.490f, 1.000f), // magenta - medo
     };
 
     string[] ColorSpeeches = new string[4]
-    {
-        "Start by creating a <color="
+    { //<color=#424242>
+        "Start by creating a <b><color="
             + ColorUtils.ColorToHex(LevelColors[0])
-            + ">happy</color> color",
-        "Now, try a <color=" + ColorUtils.ColorToHex(LevelColors[1]) + ">sadder</color> one",
-        "How think of a color that reminds you of  <color="
+            + ">happy</color></b> color",
+        "Now, try a <b><color=" + ColorUtils.ColorToHex(LevelColors[1]) + ">sadder</color></b> one",
+        "Now think of a color that reminds you of <b><color="
             + ColorUtils.ColorToHex(LevelColors[2])
-            + ">anger</color>",
-        "How about a <color=" + ColorUtils.ColorToHex(LevelColors[3]) + ">scary</color> one?",
+            + ">anger</color></b>",
+        "How about a <b><color="
+            + ColorUtils.ColorToHex(LevelColors[3])
+            + ">scary</color></b> one?",
     };
     Dictionary<MeshRenderer, float> PiecesScale = new Dictionary<MeshRenderer, float>();
 
@@ -117,7 +119,6 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
         if (Running && !PuzzleStarted) // Start puzzle
         {
-            StartCoroutine(StartRunningCoroutine());
             PuzzleStarted = true;
         }
         else if (!Running)
@@ -582,45 +583,36 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     public void VerifyResult()
     {
         float cDifference = CompareColors(FinalPiece.material.GetColor("_Color"), TargetColor);
-
+        Debug.Log("ColorDifference: " + cDifference);
+        Debug.Log("Midcolor:" + FinalPiece.material.GetColor("_Color"));
         if (cDifference <= MIN_COLOR_DIFFERENCE)
         { // correct color
-            if (GetCurrentColorLevelIndex(TargetColor) + 1 < LevelColors.Length) // Next Color
-            {
-                IndicatorPiece.material.SetColor(
-                    "_Color",
-                    LevelColors[GetCurrentColorLevelIndex(TargetColor) + 1]
-                );
-                TargetColor = IndicatorPiece.material.GetColor("_Color");
-                StartCoroutine(RestartMapBoard(1));
-            }
-            else // Puzzle Finished
-            {
-                IndicatorPiece.material.SetColor("_Color", Color.white);
-                StartCoroutine(RestartMapBoard(1, false));
-                StartCoroutine(StopRunningCoroutine());
-            }
+            LoadLevel(Level + 1);
         }
         return;
     }
 
-    IEnumerator StartRunningCoroutine()
+    void LoadLevel(int newLevel)
     {
-        LevelCompleted = false;
-        Debug.Log("Emotion puzzle started");
-        string firsttext = "Lets see if you can describe your fellings!";
-        narrator.Say(firsttext, Narrator.FraseType.None, 1.5f);
-        narrator.Say(ColorSpeeches[CurrentColor], Narrator.FraseType.Wait);
+        Debug.Log("LoadLevel");
+        if (newLevel >= LevelColors.Length)
+        {
+            OnFinishPuzzle();
+            return;
+        }
 
-        yield break;
-    }
+        Level = newLevel;
 
-    IEnumerator StopRunningCoroutine(float time = 0)
-    {
-        LevelCompleted = true;
+        StartCoroutine(LoadLevelCoroutine());
 
-        yield return new WaitForSeconds(time);
-        //Application.Quit();
+        IEnumerator LoadLevelCoroutine(float time = 1f)
+        {
+            yield return new WaitForSeconds(time);
+            StartCoroutine(RestartMapBoard(0));
+            narrator.ClearQueue();
+            narrator.Say(ColorSpeeches[newLevel], Narrator.FraseType.Wait, 0f);
+            TargetColor = LevelColors[newLevel];
+        }
     }
 
     Color GetMaterialColor(GameObject obj)
@@ -647,9 +639,20 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         mouseSystem.ShowMouse();
         Running = true;
 
-        narrator.SkipQueue();
         if (PuzzleStarted)
-            narrator.Say(ColorSpeeches[CurrentColor], Narrator.FraseType.Wait, 1.5f);
+        {
+            narrator.ClearQueue();
+            if (!hasExited)
+            {
+                string firsttext = "Lets see if you can describe your fellings!";
+                narrator.Say(firsttext, Narrator.FraseType.None, 1.5f);
+                narrator.Say(ColorSpeeches[Level], Narrator.FraseType.Wait);
+            }
+            else
+            {
+                narrator.Say(ColorSpeeches[Level], Narrator.FraseType.Wait, 1.5f);
+            }
+        }
     }
 
     public void StopRunning()
@@ -659,7 +662,9 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         mouseSystem.HideMouse();
         DeactivatePieces();
         narrator.SkipQueue();
-        narrator.ClearText();
+        narrator.ClearQueue();
+
+        hasExited = true;
 
         HoldingColor = Color.white;
         colorPicker.gameObject.transform.position = Vector3.one * 10000;
@@ -967,5 +972,10 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         }
     }
 
-    public void OnFinishPuzzle() { }
+    public void OnFinishPuzzle()
+    {
+        narrator.ClearQueue();
+        narrator.Say("Parabéns, você conseguiu!", Narrator.FraseType.None, 1f);
+        StartCoroutine(RestartMapBoard(0));
+    }
 }

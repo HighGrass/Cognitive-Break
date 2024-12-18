@@ -23,6 +23,7 @@ public class Narrator : MonoBehaviour
     List<QueueType> Queue = new List<QueueType>();
     Coroutine QueueCoroutine;
     Coroutine SkipQueueCoroutine;
+    float Timer = 0;
 
     class QueueType
     {
@@ -56,14 +57,13 @@ public class Narrator : MonoBehaviour
 
     IEnumerator ManageQueue() // every frame
     {
-        float timeout = 0;
         while (true)
         {
-            if (timeout > 0)
+            if (Timer > 0)
             {
                 if (CanProceedSpeech)
                 {
-                    timeout = 0; // skip timeout
+                    Timer = 0; // skip timeout
                     Debug.Log("NARRATOR - Speech interrupted");
                     try
                     {
@@ -78,7 +78,7 @@ public class Narrator : MonoBehaviour
                     }
                 }
 
-                timeout = Mathf.Clamp(timeout - Time.deltaTime, 0, Mathf.Infinity);
+                Timer = Mathf.Clamp(Timer - Time.deltaTime, 0, Mathf.Infinity);
             }
             else
             {
@@ -89,10 +89,10 @@ public class Narrator : MonoBehaviour
 
                     float waitTime = Queue[0].Text.Length / 24 + 3f;
 
-                    timeout = SpeechTime(Queue[0].Text) + waitTime;
+                    Timer = SpeechTime(Queue[0].Text) + waitTime;
 
                     if (Queue[0].Type == FraseType.None)
-                        SkipQueue(timeout);
+                        SkipQueue(Timer);
 
                     Queue.RemoveAt(0);
                 }
@@ -204,5 +204,18 @@ public class Narrator : MonoBehaviour
     public void ClearText()
     {
         CurrentText = "";
+    }
+
+    public void ClearQueue()
+    {
+        StopQueue();
+        if (QueueCoroutine != null)
+            StopCoroutine(QueueCoroutine);
+        if (SkipQueueCoroutine != null)
+            StopCoroutine(SkipQueueCoroutine);
+        ClearText();
+        Queue.Clear();
+        Timer = 0;
+        CanProceedSpeech = true;
     }
 }

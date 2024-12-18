@@ -244,14 +244,7 @@ public class Neuron : MonoBehaviour
             }
 
             transform.localRotation *= Quaternion.Euler(0, 0, Time.deltaTime * rotationSpeed);
-            /*
-                        transform.localRotation = Quaternion.RotateTowards(
-                            transform.localRotation,
-                            targetRotation,
-                            1
-                        );
-              */
-            Debug.Log("Rotating neuron");
+
             yield return null;
         }
         if (RotationCoroutine != null)

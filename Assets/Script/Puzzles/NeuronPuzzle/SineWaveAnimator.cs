@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SineWaveActiveAnimator : MonoBehaviour // list with positions normalized
+public class SineWaveAnimator : MonoBehaviour // list with positions normalized
 {
     public bool Initialized { get; private set; } = false;
     public bool Running { get; private set; } = true;
@@ -74,7 +74,7 @@ public class SineWaveActiveAnimator : MonoBehaviour // list with positions norma
             {
                 widthMagnitude =
                     Mathf.Sin(
-                        normalizedValue * rotation * Mathf.Deg2Rad + (Time.time * speed * i / 3)
+                        normalizedValue * rotation * Mathf.Deg2Rad + (Time.time * speed + i / 3)
                     )
                     * multiplier
                     * 4f; // PI for complete arc
