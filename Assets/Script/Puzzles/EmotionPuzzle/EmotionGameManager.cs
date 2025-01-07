@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AutoReporter;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +12,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 {
     public bool Running { get; private set; } = false;
     public bool PuzzleStarted { get; private set; } = false;
-    bool LevelCompleted = false;
+    bool PuzzleCompleted = false;
     bool piecesActive;
     bool hasExited = false;
     Dictionary<MeshRenderer, Coroutine> movingPieces = new Dictionary<MeshRenderer, Coroutine>();
@@ -88,8 +89,14 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
     MouseSystem mouseSystem;
     Narrator narrator;
 
+    Report levelData;
+    Report colorData;
+
     void Start()
     {
+        levelData = new Report("LevelProgress4");
+        colorData = new Report("ColorAcurrency4", null, Report.Type.COMPLEX);
+
         narrator = FindObjectOfType<Narrator>();
         playerInteraction = FindObjectOfType<PlayerInteraction>();
         mouseSystem = FindObjectOfType<MouseSystem>();
@@ -114,7 +121,7 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
     void Update()
     {
-        if (LevelCompleted)
+        if (PuzzleCompleted)
             return;
 
         if (Running && !PuzzleStarted) // Start puzzle
@@ -580,28 +587,33 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
         return -1;
     }
 
-    public void VerifyResult()
+    public bool VerifyResult()
     {
         float cDifference = CompareColors(FinalPiece.material.GetColor("_Color"), TargetColor);
+        float maxDifference = 2;
+        colorData.Feed((Time.time, (maxDifference, cDifference)));
+
         Debug.Log("ColorDifference: " + cDifference);
         Debug.Log("Midcolor:" + FinalPiece.material.GetColor("_Color"));
         if (cDifference <= MIN_COLOR_DIFFERENCE)
         { // correct color
             LoadLevel(Level + 1);
+            Level += 1;
+            return true;
         }
-        return;
+        return false;
     }
 
     void LoadLevel(int newLevel)
     {
+        levelData.Feed((Time.time, (newLevel, newLevel)));
+
         Debug.Log("LoadLevel");
         if (newLevel >= LevelColors.Length)
         {
             OnFinishPuzzle();
             return;
         }
-
-        Level = newLevel;
 
         StartCoroutine(LoadLevelCoroutine());
 
@@ -974,8 +986,13 @@ public class EmotionGameManager : MonoBehaviour, IPuzzle
 
     public void OnFinishPuzzle()
     {
+        CameraFix cameraFix = GetComponent<CameraFix>();
+        cameraFix.SetActivity(false);
+        PuzzleCompleted = true;
         narrator.ClearQueue();
-        narrator.Say("Parabéns, você conseguiu!", Narrator.FraseType.None, 1f);
+        narrator.Say("Congratulations, you did it!", Narrator.FraseType.None, 1f);
         StartCoroutine(RestartMapBoard(0));
     }
+
+    public bool IsFinished() => PuzzleCompleted;
 }

@@ -12,6 +12,9 @@ public class CameraFix : MonoBehaviour
     Quaternion targetWorldRotation;
     Vector3 bodyWorldPosition;
     Quaternion bodyWorldRotation;
+    public bool IsActive { get; private set; } = true;
+
+    public void SetActivity(bool activity) => IsActive = activity;
 
     public enum CameraState
     {

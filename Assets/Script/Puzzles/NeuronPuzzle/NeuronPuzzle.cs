@@ -9,6 +9,9 @@ public class NeuronPuzzle : MonoBehaviour, IPuzzle
     bool Running = false;
     float colorChange = 0.33f; //3s
     AxonController axonController;
+    bool PuzzleCompleted = false;
+
+    public bool IsFinished() => PuzzleCompleted;
 
     public Dictionary<Neuron, List<Axon>> NeuronsCache { get; private set; } =
         new Dictionary<Neuron, List<Axon>>();

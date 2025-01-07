@@ -176,7 +176,7 @@ public class Narrator : MonoBehaviour
             if (ch == ' ')
                 yield return new WaitForSeconds(spaceWrittingDelay);
             else if (ch == ',')
-                yield return new WaitForSeconds(spaceWrittingDelay * 2);
+                yield return new WaitForSeconds(spaceWrittingDelay * 10);
             else
                 yield return timer;
             CurrentText += ch;
@@ -194,7 +194,7 @@ public class Narrator : MonoBehaviour
             if (letter == ' ')
                 time += spaceWrittingDelay;
             else if (letter == ',')
-                time += spaceWrittingDelay * 2;
+                time += spaceWrittingDelay * 10;
             else
                 time += characterWrittingDelay;
         }
@@ -208,7 +208,6 @@ public class Narrator : MonoBehaviour
 
     public void ClearQueue()
     {
-        StopQueue();
         if (QueueCoroutine != null)
             StopCoroutine(QueueCoroutine);
         if (SkipQueueCoroutine != null)

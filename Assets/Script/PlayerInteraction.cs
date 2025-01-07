@@ -17,6 +17,7 @@ public class PlayerInteraction : MonoBehaviour
     GameObject tmp_obj = null;
     float animValue = 0;
     float raycastDistance = 7f;
+    Narrator narrator;
 
     //Dictionary<MeshRenderer, Color> colorStats = new Dictionary<MeshRenderer, Color>();
     Dictionary<GameObject, Dictionary<MeshRenderer, Color>> tmp_objs =
@@ -69,18 +70,24 @@ public class PlayerInteraction : MonoBehaviour
                 CameraFix cameraFix = tmp_obj.GetComponent<CameraFix>();
                 if (cameraFix)
                 {
-                    if (
-                        cameraFix.State != CameraFix.CameraState.Locking
-                        && cameraFix.State != CameraFix.CameraState.Locked
-                    )
-                        cameraFix.LockCamera();
-                    Debug.Log("Camera locked on puzzle");
-
-                    EmotionGameManager emotionGameManager =
-                        tmp_obj.GetComponent<EmotionGameManager>(); // emotion puzzle
-                    if (emotionGameManager)
+                    if (cameraFix.IsActive)
                     {
-                        emotionGameManager.StartRunning();
+                        if (
+                            cameraFix.State != CameraFix.CameraState.Locking
+                            && cameraFix.State != CameraFix.CameraState.Locked
+                        )
+                            cameraFix.LockCamera();
+                        Debug.Log("Camera locked on puzzle");
+
+                        EmotionGameManager emotionGameManager =
+                            tmp_obj.GetComponent<EmotionGameManager>(); // emotion puzzle
+                        if (emotionGameManager)
+                        {
+                            emotionGameManager.StartRunning();
+                        }
+                    }
+                    else
+                    { // puzzle finished
                     }
                 }
             }

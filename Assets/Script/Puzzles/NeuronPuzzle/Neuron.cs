@@ -54,13 +54,10 @@ public class Neuron : MonoBehaviour
         }
     }
 
-    public void Activate(Neuron energySourceNeuron)
+    public void Activate()
     {
-        if (energySourceNeuron == null)
+        if (EnergySourceNeuron == null)
             return;
-
-        EnergySourceNeuron = energySourceNeuron;
-        Energy = Mathf.Clamp(energySourceNeuron.Energy - info.ENERGY_LOSS, 0, float.MaxValue);
 
         Color sColor = Color.Lerp(
             neuronColor,
@@ -77,10 +74,14 @@ public class Neuron : MonoBehaviour
 
         foreach (Axon axon in Axons)
         {
-            if (axon.ThisNeuron.EnergySourceNeuron == this || axon.ThisNeuron.Energy < Energy) // important
+            if (
+                axon.ThisNeuron.EnergySourceNeuron == this
+                || EnergySourceNeuron != null
+                    && axon.ThisNeuron.EnergySourceNeuron.Energy < EnergySourceNeuron.Energy
+            ) // important
                 continue;
 
-            axon.ThisNeuron.DetectNeuronBehavior();
+            axon.ThisNeuron.FindPossibleEnergySource();
         }
 
         neuronPuzzle.UpdateNeuronCache(this);
@@ -89,6 +90,7 @@ public class Neuron : MonoBehaviour
 
     public void Deactivate()
     {
+        Debug.Log("Neuron deactivated: " + gameObject.name);
         Energy = 0;
         EnergySourceNeuron = null;
         foreach (LineRenderer lineRenderer in lineRenderers)
@@ -102,6 +104,7 @@ public class Neuron : MonoBehaviour
 
     public void OnNeuronClick()
     {
+        Debug.Log("NeuronClick()");
         if (!Movable)
             return;
 
@@ -145,24 +148,14 @@ public class Neuron : MonoBehaviour
             Debug.Log("FATAL ERROR: Neuronio não definido");
             return;
         }
-
-        Neuron eNeuron = FindPossibleEnergySource();
-        if (eNeuron != this && eNeuron != null)
-        {
-            EnergySourceNeuron = eNeuron;
-            Activate(eNeuron);
-        }
+        FindPossibleEnergySource();
 
         return;
     }
 
     public void DisconnectFromNeuron(Neuron neuron)
     {
-        EnergySourceNeuron = FindPossibleEnergySource();
-        if (!EnergySourceNeuron || EnergySourceNeuron == this)
-            Deactivate();
-        else
-            Activate(EnergySourceNeuron);
+        FindPossibleEnergySource();
 
         Debug.LogWarning("Disconnected from neuron: " + neuron.name);
         return;
@@ -204,18 +197,29 @@ public class Neuron : MonoBehaviour
             }
         }
 
-        if (newEnergySource != this)
-        {
-            EnergySourceNeuron = newEnergySource;
-            if (EnergySourceNeuron != null)
-            {
-                Energy = EnergySourceNeuron.Energy - info.ENERGY_LOSS;
-            }
-        }
+        SetEnergySource(newEnergySource);
         return newEnergySource;
     }
 
-    void RotateNeuron(float speed = 180f)
+    bool SetEnergySource(Neuron newEnergySource) // return if a new valid energy source was set
+    {
+        EnergySourceNeuron = newEnergySource;
+        if (newEnergySource != null)
+        {
+            if (newEnergySource != this)
+                Energy = info.NEURON_INITIAL_ENERGY - info.ENERGY_LOSS;
+            else
+                Energy = Mathf.Clamp(newEnergySource.Energy - info.ENERGY_LOSS, 0, float.MaxValue);
+            Activate();
+            return true;
+        }
+        else
+            Deactivate();
+
+        return false;
+    }
+
+    void RotateNeuron(float speed = 360f)
     {
         if (!IsRotating)
             RotationCoroutine = StartCoroutine(RotateNeuronCoroutine(speed));
@@ -252,20 +256,9 @@ public class Neuron : MonoBehaviour
             RotationCoroutine = null;
         }
         RotationCoroutine = null;
-        DetectNeuronBehavior();
+        FindPossibleEnergySource();
         Debug.Log("Neuron finished rotation");
     }
 
-    void DetectNeuronBehavior()
-    {
-        Neuron eNeuron = FindPossibleEnergySource();
-        if (!EnergySourceNeuron)
-        {
-            Deactivate();
-        }
-        else
-        {
-            Activate(eNeuron);
-        }
-    }
+    //void DetectNeuronBehavior() => FindPossibleEnergySource();
 }

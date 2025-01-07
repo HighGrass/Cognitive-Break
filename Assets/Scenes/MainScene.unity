@@ -732,12 +732,12 @@ Transform:
   m_GameObject: {fileID: 429773967}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.574657, y: 7.889533, z: 19.046177}
+  m_LocalPosition: {x: -13.574657, y: 7.92, z: 19.046177}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 129353364}
   - {fileID: 23911071}
+  - {fileID: 129353364}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &430742444
@@ -1680,8 +1680,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2445,6 +2445,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373546641}
   m_CullTransparentMesh: 1
+--- !u!114 &1530673608 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4402500193185267476, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+  m_PrefabInstance: {fileID: 1552570247}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06857a5f8a46b1340856319abb9de60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1542981498
 GameObject:
   m_ObjectHideFlags: 0
@@ -2570,6 +2581,58 @@ PrefabInstance:
       propertyPath: m_ReferencePixelsPerUnit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1017.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 497.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101738273593483172, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3871694333276065239, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 963194227}
+    - target: {fileID: 3871694333276065239, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4402500193185267476, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: EnergySourceNeuron
+      value: 
+      objectReference: {fileID: 1530673608}
+    - target: {fileID: 4424113786853276431, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_ReferencePixelsPerUnit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4584479591255812609, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4584479591255812609, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4640624215208399960, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_Name
       value: NeuronPuzzle
@@ -2578,6 +2641,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6222223975902486718, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 963194227}
     - target: {fileID: 7357895084529443526, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.1
@@ -2624,19 +2691,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.119533
+      value: -2.774
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.8561773
+      value: -6.261
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7782431
+      value: -0.627963
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.6279631
+      value: 0.77824324
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2648,7 +2715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 77.8
+      value: 257.8
       objectReference: {fileID: 0}
     - target: {fileID: 8015411999344501024, guid: 1088885b8b94e3b4892165a7cf77cd9e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -4840,10 +4907,10 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 0.576, g: 0.05644799, b: 0.05644799, a: 1}
-  m_Intensity: 24.72
-  m_Range: 21.34
-  m_SpotAngle: 110.8
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 3.9
+  m_Range: 14.4
+  m_SpotAngle: 96.8
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
@@ -4920,7 +4987,7 @@ GameObject:
   - component: {fileID: 5169151846442745791}
   - component: {fileID: 3135045413712754063}
   - component: {fileID: 7508728944624826720}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Monitor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6553,7 +6620,7 @@ GameObject:
   - component: {fileID: 4257510361621072216}
   - component: {fileID: 3422774484556569674}
   - component: {fileID: 1209010963641746630}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Teclado
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7197,7 +7264,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3b0cdd6bba5ec6a49b7b5b2e2b5a3a86, type: 2}
+  - {fileID: 5561349426305759274, guid: 35189977db87d444380cb817aa7b4536, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9681,7 +9748,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6478321517274239720}
   - component: {fileID: 830688454}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Monitor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9985,7 +10052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701ad44310bff3841a43070cb40377fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
+  currentColor: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
 --- !u!23 &6774284129623144118
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10354,7 +10421,7 @@ GameObject:
   - component: {fileID: 5860283553538780203}
   - component: {fileID: 7965102714209353263}
   - component: {fileID: 8165972839814060398}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Cabo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11318,7 +11385,6 @@ MonoBehaviour:
   - {fileID: 1755284740}
   - {fileID: 2125554760}
   IndicatorPiece: {fileID: 7462824505942926565}
-  MIN_COLOR_DIFFERENCE: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 256
