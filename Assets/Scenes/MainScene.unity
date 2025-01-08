@@ -2916,6 +2916,187 @@ Transform:
   - {fileID: 2124382707}
   m_Father: {fileID: 288712988}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1269917277
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1584
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7592564395781995991, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron7
+      objectReference: {fileID: 0}
+    - target: {fileID: -7052716708456767941, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neurons
+      objectReference: {fileID: 0}
+    - target: {fileID: -6745672531717531181, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron8
+      objectReference: {fileID: 0}
+    - target: {fileID: -5959022865278414079, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron16
+      objectReference: {fileID: 0}
+    - target: {fileID: -5715585985145706969, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron12
+      objectReference: {fileID: 0}
+    - target: {fileID: -3881504379971785572, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron3
+      objectReference: {fileID: 0}
+    - target: {fileID: -3766348648635536141, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3726763726198611387, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron17
+      objectReference: {fileID: 0}
+    - target: {fileID: -2917846310217830354, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron4
+      objectReference: {fileID: 0}
+    - target: {fileID: -2005030477933925372, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron14
+      objectReference: {fileID: 0}
+    - target: {fileID: -1818863905676845451, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron13
+      objectReference: {fileID: 0}
+    - target: {fileID: -1792346563733476434, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron20
+      objectReference: {fileID: 0}
+    - target: {fileID: -1699436472771053910, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron6
+      objectReference: {fileID: 0}
+    - target: {fileID: -1265144268185222585, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: NeuronsNumbers
+      objectReference: {fileID: 0}
+    - target: {fileID: -1133109929370867823, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron23
+      objectReference: {fileID: 0}
+    - target: {fileID: -1093777771978042150, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2db26bfcc60f917429f523533ce78abf, type: 2}
+    - target: {fileID: -694736870730842807, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron26
+      objectReference: {fileID: 0}
+    - target: {fileID: 122805509888558062, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron19
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neurons
+      objectReference: {fileID: 0}
+    - target: {fileID: 1215673933679940030, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00124
+      objectReference: {fileID: 0}
+    - target: {fileID: 1506314985034310747, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699489424557842962, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2597563661874207852, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3040090624367829716, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3111300288074725903, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3370054927282761499, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron21
+      objectReference: {fileID: 0}
+    - target: {fileID: 4693516469276920995, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron27
+      objectReference: {fileID: 0}
+    - target: {fileID: 5212201690433636954, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5389430063988557202, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916148572300469343, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8498289172233277927, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron22
+      objectReference: {fileID: 0}
+    - target: {fileID: 9176746491312240780, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
+      propertyPath: m_Name
+      value: Neuron24
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 244aad239d9319e4f92e114923a3c4ae, type: 3}
 --- !u!1 &1315543984
 GameObject:
   m_ObjectHideFlags: 0
@@ -12824,3 +13005,4 @@ SceneRoots:
   - {fileID: 1748463923}
   - {fileID: 931321205}
   - {fileID: 1181437214}
+  - {fileID: 1269917277}
