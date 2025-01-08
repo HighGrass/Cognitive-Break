@@ -1496,6 +1496,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -6956525427204708279, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_Name
+      value: Base
+      objectReference: {fileID: 0}
+    - target: {fileID: -6956525427204708279, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1556,6 +1560,10 @@ PrefabInstance:
       value: Spotlight5PC
       objectReference: {fileID: 0}
     - target: {fileID: -4509293682160355534, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4509293682160355534, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1566,6 +1574,10 @@ PrefabInstance:
     - target: {fileID: -3923974427014760179, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_Name
       value: Sportlight2NT
+      objectReference: {fileID: 0}
+    - target: {fileID: -3923974427014760179, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -3923974427014760179, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1592,20 +1604,24 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -3699367564267386197, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_Name
+      value: LightSettings
+      objectReference: {fileID: 0}
+    - target: {fileID: -3699367564267386197, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: -3214406982011789329, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_Range
-      value: 0.1
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: -3214406982011789329, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_Intensity
-      value: 0.1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -3214406982011789329, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_SpotAngle
-      value: 40
+      value: 50.056183
       objectReference: {fileID: 0}
     - target: {fileID: -3214406982011789329, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_Lightmapping
@@ -1613,7 +1629,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3214406982011789329, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 16
+      value: 46.928818
       objectReference: {fileID: 0}
     - target: {fileID: -3214406982011789329, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_Shadows.m_Type
@@ -1658,6 +1674,10 @@ PrefabInstance:
     - target: {fileID: -835039729651433704, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_InnerSpotAngle
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 801040574691976877, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_Name
+      value: Led1
       objectReference: {fileID: 0}
     - target: {fileID: 801040574691976877, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1736,6 +1756,10 @@ PrefabInstance:
       value: Spotlight4TV
       objectReference: {fileID: 0}
     - target: {fileID: 4691465104695487738, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4691465104695487738, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1786,6 +1810,10 @@ PrefabInstance:
     - target: {fileID: 8996636781812745691, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_Name
       value: Spotlight3Shelf
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996636781812745691, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8996636781812745691, guid: cbc7c8199f8c1bb419b33bd00fad2896, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2519,6 +2547,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -2603,6 +2632,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &747099886
 GameObject:
   m_ObjectHideFlags: 0
@@ -7765,6 +7817,7 @@ GameObject:
   m_Component:
   - component: {fileID: 685000255039530241}
   - component: {fileID: 7273594037425146294}
+  - component: {fileID: 7273594037425146295}
   m_Layer: 3
   m_Name: Luz_mesa_controlo
   m_TagString: Untagged
@@ -10729,6 +10782,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2780329720230020876}
   - component: {fileID: 6165275364789101104}
+  - component: {fileID: 6165275364789101105}
   m_Layer: 3
   m_Name: Luz_mesa_sentimentos
   m_TagString: Untagged
@@ -10871,6 +10925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 157028566619007498}
   - component: {fileID: 4629836517099908334}
+  - component: {fileID: 4629836517099908335}
   m_Layer: 3
   m_Name: Luz_estante
   m_TagString: Untagged
@@ -11048,6 +11103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 14738346684055883}
   - component: {fileID: 3445009284408177297}
+  - component: {fileID: 4221751234421579202}
   m_Layer: 3
   m_Name: Luz_mesa_neuronios
   m_TagString: Untagged
@@ -11055,6 +11111,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &4221751234421579202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4221751234421579201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!4 &4257510361621072216
 Transform:
   m_ObjectHideFlags: 0
@@ -11350,6 +11429,29 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &4629836517099908335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4020423650176518768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &4693516470231737962
 GameObject:
   m_ObjectHideFlags: 0
@@ -12640,6 +12742,29 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &6165275364789101105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3763736265902720628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!23 &6255149756950111512
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13693,6 +13818,29 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &7273594037425146295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160598329116752930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!23 &7280396907822752588
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13837,6 +13985,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8026784796925453325}
   - component: {fileID: 451818460845693480}
+  - component: {fileID: 8026784796925453326}
   m_Layer: 3
   m_Name: Luz_controlador_cardiaco
   m_TagString: Untagged
@@ -14239,6 +14388,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4552659298487537971}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8026784796925453326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7389651376355839016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!33 &8044567441667871475
 MeshFilter:
   m_ObjectHideFlags: 0
