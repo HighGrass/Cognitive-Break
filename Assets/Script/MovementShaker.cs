@@ -28,7 +28,7 @@ public class MovementShaker : MonoBehaviour
     Vector3 defaultLocalPosition;
     public float Speed // player speed == animation speed
     {
-        get => rb.velocity.magnitude;
+        get => rb.linearVelocity.magnitude;
     }
 
     Foot FootActive = Foot.RightFoot; // for good luck

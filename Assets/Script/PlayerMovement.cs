@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float Speed
     {
-        get => rb.velocity.magnitude;
+        get => rb.linearVelocity.magnitude;
     }
 
     private void Awake()
@@ -34,14 +34,14 @@ public class PlayerMovement : MonoBehaviour
         if (MovementLocked)
             BodyRotationY = transform.rotation.eulerAngles.y; // turn body to interaction object
         else if (Speed > 0.01f)
-            BodyRotationY = Mathf.Atan2(rb.velocity.x, rb.velocity.z) * Mathf.Rad2Deg;
+            BodyRotationY = Mathf.Atan2(rb.linearVelocity.x, rb.linearVelocity.z) * Mathf.Rad2Deg;
     }
 
     void FixedUpdate()
     {
         if (MovementLocked)
         {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             return;
         }
         Move();
@@ -82,16 +82,16 @@ public class PlayerMovement : MonoBehaviour
 
             // Move o Rigidbody com velocidade limitada
             Vector3 newVelocity = moveDirection * moveSpeed;
-            newVelocity.y = rb.velocity.y; // Mantém o valor de gravidade no eixo Y
-            rb.velocity = newVelocity;
+            newVelocity.y = rb.linearVelocity.y; // Mantém o valor de gravidade no eixo Y
+            rb.linearVelocity = newVelocity;
         }
         else
         {
             // Desaceleração gradual quando o jogador para
-            Vector3 velocity = rb.velocity;
+            Vector3 velocity = rb.linearVelocity;
             velocity.x *= 0.8f;
             velocity.z *= 0.8f;
-            rb.velocity = velocity;
+            rb.linearVelocity = velocity;
 
             moveSpeed = Mathf.Clamp(moveSpeed - Time.fixedDeltaTime * 7, MIN_SPEED, MAX_SPEED);
         }
